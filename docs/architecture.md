@@ -15,7 +15,7 @@ flowchart TD
   State --> Domain[domain/<br/>validation, status and sprint rules<br/>pure TS, unit-tested]
   State --> Repo[repository/<br/>load, save, migrate, export, import]
   Repo --> LS[(localStorage)]
-  UI -. stretch .-> Fn[/api/draft-stories<br/>serverless function/]
+  UI -. stretch .-> Fn["/api/draft-stories<br/>serverless function"]
   Fn -. stretch .-> Claude[Claude API]
 ```
 
