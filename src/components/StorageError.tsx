@@ -30,7 +30,8 @@ function downloadRaw(raw: string) {
   link.href = url
   link.download = 'sprintlab-data-backup.json'
   link.click()
-  URL.revokeObjectURL(url)
+  // Revoking in the same tick can cancel the download in some browsers.
+  setTimeout(() => URL.revokeObjectURL(url), 0)
 }
 
 export function StorageError({ error, raw, onReset }: StorageErrorProps) {

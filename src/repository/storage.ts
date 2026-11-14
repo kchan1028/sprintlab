@@ -87,7 +87,14 @@ export function loadData(storage: KeyValueStorage = defaultStorage()): LoadResul
 }
 
 function isQuotaError(err: unknown): boolean {
-  return err instanceof DOMException && (err.name === 'QuotaExceededError' || err.code === 22)
+  if (!(err instanceof DOMException)) return false
+  // Firefox historically used a different name and code for the same error.
+  return (
+    err.name === 'QuotaExceededError' ||
+    err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+    err.code === 22 ||
+    err.code === 1014
+  )
 }
 
 /** Writes app data. Never throws: problems come back as a SaveResult error. */

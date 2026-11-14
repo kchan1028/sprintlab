@@ -98,6 +98,11 @@ describe('saveData', () => {
     expect(saveData(sample, storage)).toEqual({ ok: false, error: 'quota_exceeded' })
   })
 
+  it('recognises the Firefox quota error name', () => {
+    const storage = throwingStorage(new DOMException('full', 'NS_ERROR_DOM_QUOTA_REACHED'))
+    expect(saveData(sample, storage)).toEqual({ ok: false, error: 'quota_exceeded' })
+  })
+
   it('reports other write failures as unavailable', () => {
     const storage = throwingStorage(new Error('nope'))
     expect(saveData(sample, storage)).toEqual({ ok: false, error: 'unavailable' })
