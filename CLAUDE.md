@@ -8,7 +8,7 @@ Single-user project and bug tracker. React + TypeScript + Vite, data in localSto
 
 ## Commands
 
-Requires Node 22.12+ (the repo pins 24 in `.nvmrc`; run `nvm use`).
+Requires Node 22.12+ (the repo pins an exact Node 24 release in `.nvmrc`; run `nvm use`).
 
 | Command | What it does |
 |---|---|
@@ -21,6 +21,8 @@ Requires Node 22.12+ (the repo pins 24 in `.nvmrc`; run `nvm use`).
 | `npm run build` | Typecheck and production build to `dist/` |
 
 CI (`.github/workflows/ci.yml`) runs lint, typecheck, test and build on every PR and on pushes to `main`.
+
+Deploys: Cloudflare Pages Git integration. `main` → production, every PR → preview URL. See `docs/deployment.md`.
 
 ## Workflow
 
