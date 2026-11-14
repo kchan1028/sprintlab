@@ -19,6 +19,16 @@ flowchart TD
   Fn -. stretch .-> Claude[Claude API]
 ```
 
+## Routes
+
+React Router 8 in declarative mode (`BrowserRouter` + `Routes`). Cloudflare Pages serves `index.html` for unknown paths, so deep links work after a reload.
+
+| Path | Screen |
+|---|---|
+| `/` | Projects list |
+| `/projects/:projectId` | Project page with its work items (unknown id → "Project not found") |
+| `*` | Page not found |
+
 ## Data model
 
 ```ts

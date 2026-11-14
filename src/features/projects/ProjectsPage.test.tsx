@@ -1,7 +1,7 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import App from '../../App'
+import { renderApp } from '../../test/renderApp'
 import { STORAGE_KEY, loadData } from '../../repository/storage'
 
 function storedProjects() {
@@ -28,18 +28,18 @@ afterEach(() => {
 
 describe('Projects', () => {
   it('shows an empty state and a New project button when there are no projects', () => {
-    render(<App />)
+    renderApp()
     expect(screen.getByText('No projects yet.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'New project' })).toBeInTheDocument()
   })
 
   it('does not write to storage just by loading', () => {
-    render(<App />)
+    renderApp()
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
   })
 
   it('creates a project that appears immediately and is saved', async () => {
-    render(<App />)
+    renderApp()
     await createProject('  Bike calculator  ', 'Gear ratios')
     const list = screen.getByRole('list')
     expect(within(list).getByRole('heading', { name: 'Bike calculator' })).toBeInTheDocument()
@@ -48,16 +48,16 @@ describe('Projects', () => {
   })
 
   it('keeps projects after a reload', async () => {
-    const { unmount } = render(<App />)
+    const { unmount } = renderApp()
     await createProject('Bike calculator')
     unmount()
-    render(<App />)
+    renderApp()
     expect(screen.getByRole('heading', { name: 'Bike calculator' })).toBeInTheDocument()
   })
 
   it('shows an inline error for an empty name and saves nothing', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderApp()
     await user.click(screen.getByRole('button', { name: 'New project' }))
     await user.type(screen.getByLabelText('Name (required)'), '   ')
     await user.click(screen.getByRole('button', { name: 'Create project' }))
@@ -71,7 +71,7 @@ describe('Projects', () => {
 
   it('rejects a name longer than 80 characters', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderApp()
     await user.click(screen.getByRole('button', { name: 'New project' }))
     await user.type(screen.getByLabelText('Name (required)'), 'a'.repeat(81))
     await user.click(screen.getByRole('button', { name: 'Create project' }))
@@ -82,7 +82,7 @@ describe('Projects', () => {
   })
 
   it('allows two projects with the same name', async () => {
-    render(<App />)
+    renderApp()
     await createProject('Same')
     await createProject('Same')
     expect(screen.getAllByRole('heading', { name: 'Same' })).toHaveLength(2)
@@ -92,7 +92,7 @@ describe('Projects', () => {
   it('edits a project name and updates updatedAt but not createdAt', async () => {
     const user = userEvent.setup()
     vi.spyOn(Date.prototype, 'toISOString').mockReturnValue('2026-11-14T10:00:00.000Z')
-    render(<App />)
+    renderApp()
     await createProject('Old name')
 
     vi.spyOn(Date.prototype, 'toISOString').mockReturnValue('2026-11-15T10:00:00.000Z')
@@ -111,7 +111,7 @@ describe('Projects', () => {
 
   it('discards changes when editing is cancelled', async () => {
     const user = userEvent.setup()
-    render(<App />)
+    renderApp()
     await createProject('Keep me')
     await user.click(screen.getByRole('button', { name: 'Edit Keep me' }))
     await user.clear(screen.getByLabelText('Name (required)'))
@@ -125,7 +125,7 @@ describe('Projects', () => {
     vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
       throw new DOMException('full', 'QuotaExceededError')
     })
-    render(<App />)
+    renderApp()
     await createProject('Unsaved')
     expect(screen.getByRole('alert')).toHaveTextContent('Browser storage is full')
     expect(screen.getByRole('heading', { name: 'Unsaved' })).toBeInTheDocument()
