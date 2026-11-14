@@ -28,7 +28,7 @@ describe('Work items', () => {
     renderApp('/')
     await userEvent.click(screen.getByRole('link', { name: 'Bike calculator' }))
     expect(screen.getByRole('heading', { level: 2, name: 'Bike calculator' })).toBeInTheDocument()
-    expect(screen.getByText('No work items yet.')).toBeInTheDocument()
+    expect(screen.getByText(/No work items yet/)).toBeInTheDocument()
   })
 
   it('shows not found for an unknown project id', () => {
@@ -52,9 +52,9 @@ describe('Work items', () => {
     await user.click(screen.getByRole('button', { name: 'Add criterion' }))
     await user.click(screen.getByRole('button', { name: 'Create work item' }))
 
-    const list = screen.getByRole('list')
-    expect(within(list).getByRole('heading', { name: 'Bug Crash on empty name' })).toBeInTheDocument()
-    expect(within(list).getByText(/High priority · Backlog · 2 acceptance criteria/)).toBeInTheDocument()
+    const backlog = screen.getByRole('region', { name: /Backlog/ })
+    expect(within(backlog).getByRole('heading', { name: 'Bug Crash on empty name' })).toBeInTheDocument()
+    expect(within(backlog).getByText('High priority · 2 acceptance criteria')).toBeInTheDocument()
     expect(storedItems()).toMatchObject([
       {
         projectId: 'p1',
@@ -124,6 +124,6 @@ describe('Work items', () => {
     await user.click(screen.getByRole('button', { name: 'Create work item' }))
     await user.click(screen.getByRole('link', { name: 'All projects' }))
     await user.click(screen.getByRole('link', { name: 'Other' }))
-    expect(screen.getByText('No work items yet.')).toBeInTheDocument()
+    expect(screen.getByText(/No work items yet/)).toBeInTheDocument()
   })
 })

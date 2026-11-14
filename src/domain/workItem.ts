@@ -90,6 +90,15 @@ export function toWorkItemInput(item: WorkItem): WorkItemInput {
   }
 }
 
+/** Board column order. */
+export const STATUSES: readonly Status[] = ['backlog', 'ready', 'in_progress', 'review', 'done']
+
+/** Moves an item to another status. Returns the same object when nothing changes, so no save happens. */
+export function moveWorkItem(item: WorkItem, status: Status, now: Timestamp): WorkItem {
+  if (item.status === status) return item
+  return { ...item, status, updatedAt: now }
+}
+
 export const STATUS_LABELS: Record<Status, string> = {
   backlog: 'Backlog',
   ready: 'Ready',
