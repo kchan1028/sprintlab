@@ -24,6 +24,8 @@ CI (`.github/workflows/ci.yml`) runs lint, typecheck, test and build on every PR
 
 Deploys: Cloudflare Pages Git integration. `main` → production, every PR → preview URL. See `docs/deployment.md`.
 
+Verification is **local only** (owner decision, 2026-11-14): run `npm run dev` and follow the PR's "How to verify" steps in a browser. Don't check Cloudflare production or preview URLs.
+
 ## Workflow
 
 - One issue → one branch → one PR. Branch names: `<type>/<issue#>-<slug>` (e.g. `feat/6-projects`).
