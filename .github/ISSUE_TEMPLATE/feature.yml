@@ -1,0 +1,28 @@
+name: Feature / user story
+description: A new capability, written from the user's point of view
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: User story
+      placeholder: As a <user>, I want <capability> so that <benefit>.
+    validations:
+      required: true
+  - type: textarea
+    id: criteria
+    attributes:
+      label: Acceptance criteria
+      description: Observable outcomes. One checkbox per criterion.
+      placeholder: "- [ ] ..."
+    validations:
+      required: true
+  - type: textarea
+    id: edge-cases
+    attributes:
+      label: Edge cases
+  - type: input
+    id: deps
+    attributes:
+      label: Dependencies
+      placeholder: "#5, #6 or None"
