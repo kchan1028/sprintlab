@@ -292,3 +292,63 @@ fieldset.field legend {
   font-size: 0.875rem;
   min-width: 0;
 }
+
+.sprints {
+  margin-bottom: 1.5rem;
+}
+
+.sprint-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sprint-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #d0d7de;
+}
+
+.sprint-row h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.sprint-row p {
+  margin: 0.25rem 0 0;
+}
+
+.state {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.0625rem 0.375rem;
+  border-radius: 999px;
+  vertical-align: middle;
+  border: 1px solid currentColor;
+}
+
+.state-planned {
+  color: #59636e;
+}
+
+.state-active {
+  color: #1a7f37;
+}
+
+.state-completed {
+  color: #6639ba;
+}
+
+.date-fields {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.field input[type='date'] {
+  justify-self: start;
+}

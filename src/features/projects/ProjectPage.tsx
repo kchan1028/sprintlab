@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router'
 import { useAppData } from '../../state/useAppData'
+import { SprintsSection } from '../sprints/SprintsSection'
 import { WorkItemsSection } from '../workItems/WorkItemsSection'
 
 export function ProjectPage() {
@@ -26,6 +27,7 @@ export function ProjectPage() {
         <h2>{project.name}</h2>
         {project.description && <p>{project.description}</p>}
       </header>
+      <SprintsSection project={project} />
       <WorkItemsSection project={project} />
     </>
   )
