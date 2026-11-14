@@ -17,7 +17,7 @@ SprintLab v1 is a single-user tracker built by one developer in about four weeks
 
 Option 1. Data access goes through a repository module, so moving to a backend later (option 2) changes that module rather than the UI.
 
-Supporting choices: React Router for routing, `useReducer` + Context for state, Vitest + Testing Library for unit and component tests, Playwright for one end-to-end smoke test, ESLint + Prettier, GitHub Actions for CI, and a free static host with PR previews (Netlify or Cloudflare Pages, decided in #4).
+Supporting choices: React Router for routing, `useReducer` + Context for state, Vitest + Testing Library for unit and component tests, Playwright for one end-to-end smoke test, a linter, GitHub Actions for CI, and a free static host with PR previews (Netlify or Cloudflare Pages, decided in #4).
 
 ## Consequences
 
@@ -25,3 +25,9 @@ Supporting choices: React Router for routing, `useReducer` + Context for state, 
 - localStorage is synchronous and limited to roughly 5 MB. That's ample for one user's text data. Write failures must be handled (#12).
 - The AI stretch goal needs a serverless function so the API key never reaches the browser.
 - If sync across devices becomes a goal, a new ADR will cover the move to a backend.
+
+## Amendment (2026-11-14, #3)
+
+- **Linter:** the current Vite React template (create-vite 9) ships oxlint, not ESLint. We kept oxlint: less config and much faster, with the React hooks rules we need. `--deny-warnings` makes warnings fail CI.
+- **Formatter:** Prettier is deferred. One developer, and lint plus typecheck catch what matters. Revisit if formatting churn shows up in diffs.
+- **Node:** Vitest 5 and jsdom 31 require Node 22.12+. The repo pins Node 24 (`.nvmrc`), and CI reads the same file.

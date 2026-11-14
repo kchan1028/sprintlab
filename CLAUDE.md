@@ -8,7 +8,19 @@ Single-user project and bug tracker. React + TypeScript + Vite, data in localSto
 
 ## Commands
 
-None yet. Added with the app scaffold (#3): `dev`, `lint`, `typecheck`, `test`, `build`.
+Requires Node 22.12+ (the repo pins 24 in `.nvmrc`; run `nvm use`).
+
+| Command | What it does |
+|---|---|
+| `npm install` | Install dependencies |
+| `npm run dev` | Start the dev server |
+| `npm run lint` | oxlint; warnings fail the run |
+| `npm run typecheck` | TypeScript project check (`tsc -b`) |
+| `npm test` | Vitest, single run |
+| `npm run test:watch` | Vitest in watch mode |
+| `npm run build` | Typecheck and production build to `dist/` |
+
+CI (`.github/workflows/ci.yml`) runs lint, typecheck, test and build on every PR and on pushes to `main`.
 
 ## Workflow
 
