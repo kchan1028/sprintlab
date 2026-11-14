@@ -1,6 +1,15 @@
 import { useState } from 'react'
+import { SaveErrorBanner } from './components/SaveErrorBanner'
 import { StorageError } from './components/StorageError'
+import { ProjectsPage } from './features/projects/ProjectsPage'
 import { loadData, resetData, type LoadResult } from './repository/storage'
+import { AppDataProvider } from './state/AppDataProvider'
+import { useAppData } from './state/useAppData'
+
+function SaveStatus() {
+  const { saveError } = useAppData()
+  return saveError ? <SaveErrorBanner error={saveError} /> : null
+}
 
 function App() {
   const [loaded, setLoaded] = useState<LoadResult>(() => loadData())
@@ -19,7 +28,10 @@ function App() {
       <h1>SprintLab</h1>
       <p>A small project and bug tracker for a solo developer.</p>
       {loaded.ok ? (
-        loaded.data.projects.length === 0 && <p>No projects yet.</p>
+        <AppDataProvider initialData={loaded.data}>
+          <SaveStatus />
+          <ProjectsPage />
+        </AppDataProvider>
       ) : (
         <StorageError error={loaded.error} raw={loaded.raw} onReset={handleReset} />
       )}
