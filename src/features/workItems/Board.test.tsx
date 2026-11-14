@@ -44,8 +44,8 @@ describe('Board', () => {
 
   it('puts each item in the column matching its status', () => {
     renderApp('/projects/p1')
-    expect(within(column('Backlog')).getByRole('heading', { name: 'Story Export data' })).toBeInTheDocument()
-    expect(within(column('In Progress')).getByRole('heading', { name: 'Story Fix crash' })).toBeInTheDocument()
+    expect(within(column('Backlog')).getByRole('heading', { name: 'Export data' })).toBeInTheDocument()
+    expect(within(column('In Progress')).getByRole('heading', { name: 'Fix crash' })).toBeInTheDocument()
   })
 
   it('shows an empty state in columns with no items', () => {
@@ -63,7 +63,7 @@ describe('Board', () => {
 
     await user.selectOptions(screen.getByLabelText('Status of Export data'), 'Review')
 
-    expect(within(column('Review')).getByRole('heading', { name: 'Story Export data' })).toBeInTheDocument()
+    expect(within(column('Review')).getByRole('heading', { name: 'Export data' })).toBeInTheDocument()
     expect(within(column('Backlog')).getByText('No items')).toBeInTheDocument()
     expect(screen.getByLabelText('Status of Export data')).toHaveFocus()
     expect(storedItem('w1')).toMatchObject({ status: 'review', updatedAt: '2026-11-15T10:00:00.000Z' })
@@ -88,7 +88,7 @@ describe('Board', () => {
     await user.selectOptions(screen.getByLabelText('Status of Fix crash'), 'Done')
     unmount()
     renderApp('/projects/p1')
-    expect(within(column('Done')).getByRole('heading', { name: 'Story Fix crash' })).toBeInTheDocument()
+    expect(within(column('Done')).getByRole('heading', { name: 'Fix crash' })).toBeInTheDocument()
   })
 
   it('keeps the status when an item is edited', async () => {

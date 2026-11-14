@@ -17,6 +17,7 @@ import {
   updateWorkItem,
   type WorkItemInput,
 } from '../../domain/workItem'
+import { useFocusReturn } from '../../lib/useFocusReturn'
 import { useAppData } from '../../state/useAppData'
 import { Board } from './Board'
 import { WorkItemForm } from './WorkItemForm'
@@ -34,7 +35,13 @@ export function WorkItemsSection({ project }: { project: Project }) {
   const pendingFocus = useRef<string | null>(null)
   const filterRef = useRef<HTMLSelectElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
-  const close = () => setEditing({ mode: 'none' })
+  const { returnTo, focusTarget } = useFocusReturn()
+
+  /** Closes the form and sends focus back to the button that opened it. */
+  const close = () => {
+    returnTo(editing.mode === 'edit' ? `edit-${editing.itemId}` : 'new')
+    setEditing({ mode: 'none' })
+  }
 
   const items = data.workItems.filter((w) => w.projectId === project.id)
   const sprints = sortSprints(data.sprints.filter((s) => s.projectId === project.id))
@@ -100,7 +107,7 @@ export function WorkItemsSection({ project }: { project: Project }) {
       <div className="section-header">
         <h2 id="board-heading">Board</h2>
         {editing.mode === 'none' && (
-          <button type="button" onClick={() => setEditing({ mode: 'create' })}>
+          <button type="button" ref={focusTarget('new')} onClick={() => setEditing({ mode: 'create' })}>
             New work item
           </button>
         )}
@@ -158,6 +165,7 @@ export function WorkItemsSection({ project }: { project: Project }) {
         canEdit={editing.mode === 'none'}
         onMove={handleMove}
         onAssign={handleAssign}
+        editButtonRef={(id) => focusTarget(`edit-${id}`)}
         onEdit={(item) => setEditing({ mode: 'edit', itemId: item.id })}
       />
     </section>

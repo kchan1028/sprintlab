@@ -128,7 +128,7 @@ describe('Sprint review and retro', () => {
     saveData({ ...emptyData(), projects: [project], sprints: [sprint('s0', 'Sprint 0', 'completed', '2026-11-09')] })
     renderApp('/projects/p1')
 
-    await user.click(screen.getByRole('button', { name: 'Review and retro for Sprint 0' }))
+    await user.click(screen.getByRole('button', { name: /review and retro for Sprint 0$/i }))
     await user.type(screen.getByLabelText('What was delivered?'), 'Board shipped')
     await user.type(screen.getByLabelText('What went well?'), 'Mutation checks')
     await user.type(screen.getByLabelText('What should improve?'), 'Set the goal first')
@@ -143,7 +143,7 @@ describe('Sprint review and retro', () => {
     const notes = within(row('Sprint 0'))
     expect(notes.getByText('Board shipped')).toBeInTheDocument()
     expect(notes.getByText('Write the goal on day one')).toBeInTheDocument()
-    expect(notes.getByRole('button', { name: 'Review and retro for Sprint 0' })).toHaveTextContent('Edit review and retro')
+    expect(notes.getByRole('button', { name: 'Edit review and retro for Sprint 0' })).toHaveTextContent('Edit review and retro')
   })
 
   it('prefills existing notes when editing and keeps them on cancel', async () => {
@@ -151,7 +151,7 @@ describe('Sprint review and retro', () => {
     const s0 = { ...sprint('s0', 'Sprint 0', 'completed', '2026-11-09'), review: 'Old review' }
     saveData({ ...emptyData(), projects: [project], sprints: [s0] })
     renderApp('/projects/p1')
-    await user.click(screen.getByRole('button', { name: 'Review and retro for Sprint 0' }))
+    await user.click(screen.getByRole('button', { name: /review and retro for Sprint 0$/i }))
     const review = screen.getByLabelText('What was delivered?')
     expect(review).toHaveValue('Old review')
     await user.clear(review)
@@ -162,6 +162,6 @@ describe('Sprint review and retro', () => {
   it('is not offered on planned sprints', () => {
     saveData({ ...emptyData(), projects: [project], sprints: [sprint('s2', 'Sprint 2', 'planned', '2026-11-23')] })
     renderApp('/projects/p1')
-    expect(screen.queryByRole('button', { name: 'Review and retro for Sprint 2' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /review and retro for Sprint 2$/i })).not.toBeInTheDocument()
   })
 })

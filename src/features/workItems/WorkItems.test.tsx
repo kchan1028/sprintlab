@@ -53,7 +53,7 @@ describe('Work items', () => {
     await user.click(screen.getByRole('button', { name: 'Create work item' }))
 
     const backlog = screen.getByRole('region', { name: /Backlog/ })
-    expect(within(backlog).getByRole('heading', { name: 'Bug Crash on empty name' })).toBeInTheDocument()
+    expect(within(backlog).getByRole('heading', { name: 'Crash on empty name' })).toBeInTheDocument()
     expect(within(backlog).getByText('High priority · 2 acceptance criteria')).toBeInTheDocument()
     expect(storedItems()).toMatchObject([
       {
@@ -110,7 +110,7 @@ describe('Work items', () => {
 
     unmount()
     renderApp('/projects/p1')
-    expect(screen.getByRole('heading', { name: 'Story New title' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'New title' })).toBeInTheDocument()
     expect(screen.queryByText(/Old title/)).not.toBeInTheDocument()
     expect(storedItems()).toHaveLength(1)
     expect(storedItems()[0]).toMatchObject({ title: 'New title', priority: 'low' })
