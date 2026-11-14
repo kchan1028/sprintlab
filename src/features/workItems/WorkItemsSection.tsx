@@ -45,10 +45,12 @@ export function WorkItemsSection({ project }: { project: Project }) {
   function setFilter(next: SprintFilter) {
     const value = filterToParam(next)
     setSearchParams(
-      (params) => {
-        if (value === null) params.delete('sprint')
-        else params.set('sprint', value)
-        return params
+      (current) => {
+        // Copy rather than mutate the router's current params.
+        const next = new URLSearchParams(current)
+        if (value === null) next.delete('sprint')
+        else next.set('sprint', value)
+        return next
       },
       { replace: true },
     )
