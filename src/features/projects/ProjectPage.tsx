@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router'
+import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useAppData } from '../../state/useAppData'
 import { SprintsSection } from '../sprints/SprintsSection'
 import { WorkItemsSection } from '../workItems/WorkItemsSection'
@@ -7,6 +8,7 @@ export function ProjectPage() {
   const { projectId } = useParams()
   const { data } = useAppData()
   const project = data.projects.find((p) => p.id === projectId)
+  useDocumentTitle(project ? project.name : 'Project not found')
 
   if (!project) {
     return (

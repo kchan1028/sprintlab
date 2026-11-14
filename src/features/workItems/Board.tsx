@@ -15,6 +15,8 @@ interface BoardProps {
   onMove: (item: WorkItem, status: Status) => void
   onAssign: (item: WorkItem, sprintId: string | null) => void
   onEdit: (item: WorkItem) => void
+  /** Lets the parent return focus to an item's Edit button after its form closes. */
+  editButtonRef?: (itemId: string) => (el: HTMLButtonElement | null) => void
 }
 
 function criteriaLabel(count: number) {
@@ -25,7 +27,17 @@ function sprintOptionLabel(sprint: Sprint) {
   return `${sprint.name} (${SPRINT_STATE_LABELS[sprint.state]})`
 }
 
-export function Board({ items, sprints, assignable, pendingFocus, canEdit, onMove, onAssign, onEdit }: BoardProps) {
+export function Board({
+  items,
+  sprints,
+  assignable,
+  pendingFocus,
+  canEdit,
+  onMove,
+  onAssign,
+  onEdit,
+  editButtonRef,
+}: BoardProps) {
   return (
     <div className="board">
       {STATUSES.map((status) => {
@@ -47,9 +59,8 @@ export function Board({ items, sprints, assignable, pendingFocus, canEdit, onMov
                   const showCurrentCompleted = current?.state === 'completed'
                   return (
                     <li key={item.id} className="card">
-                      <h4>
-                        <span className={`badge badge-${item.type}`}>{TYPE_LABELS[item.type]}</span> {item.title}
-                      </h4>
+                      <span className={`badge badge-${item.type}`}>{TYPE_LABELS[item.type]}</span>
+                      <h4>{item.title}</h4>
                       <p className="item-meta">
                         {PRIORITY_LABELS[item.priority]} priority · {criteriaLabel(item.acceptanceCriteria.length)}
                       </p>
@@ -95,7 +106,12 @@ export function Board({ items, sprints, assignable, pendingFocus, canEdit, onMov
                           ))}
                         </select>
                         {canEdit && (
-                          <button type="button" aria-label={`Edit ${item.title}`} onClick={() => onEdit(item)}>
+                          <button
+                            type="button"
+                            ref={editButtonRef?.(item.id)}
+                            aria-label={`Edit ${item.title}`}
+                            onClick={() => onEdit(item)}
+                          >
                             Edit
                           </button>
                         )}

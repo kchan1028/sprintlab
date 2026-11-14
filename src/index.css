@@ -9,6 +9,12 @@ body {
   margin: 0;
 }
 
+/* One clear focus ring everywhere, shown for keyboard focus only. #0969da is 5.2:1 on white. */
+:focus-visible {
+  outline: 2px solid #0969da;
+  outline-offset: 2px;
+}
+
 .app {
   max-width: 64rem;
   margin: 0 auto;
@@ -279,6 +285,10 @@ fieldset.field legend {
   border: 1px solid #d0d7de;
   border-radius: 6px;
   padding: 0.5rem;
+}
+
+.card .badge {
+  margin-bottom: 0.25rem;
 }
 
 .card h4 {
