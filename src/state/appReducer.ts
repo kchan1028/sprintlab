@@ -1,3 +1,4 @@
+import { deleteProject } from '../domain/deletion'
 import type { AppData, Project, Sprint, WorkItem } from '../domain/types'
 
 export type AppAction =
@@ -7,6 +8,10 @@ export type AppAction =
   | { type: 'workItem/updated'; workItem: WorkItem }
   | { type: 'sprint/created'; sprint: Sprint }
   | { type: 'sprint/updated'; sprint: Sprint }
+  /** Removes a project with its work items and sprints. */
+  | { type: 'project/deleted'; projectId: string }
+  /** Replaces all data, e.g. after an import. */
+  | { type: 'data/replaced'; data: AppData }
   /** Completes a sprint and moves its unfinished items in one save. */
   | { type: 'sprint/completed'; sprint: Sprint; movedItems: WorkItem[] }
 
@@ -20,6 +25,10 @@ export function appReducer(state: AppData, action: AppAction): AppData {
       return { ...state, projects: [...state.projects, action.project] }
     case 'project/updated':
       return { ...state, projects: replaceById(state.projects, action.project) }
+    case 'project/deleted':
+      return deleteProject(state, action.projectId)
+    case 'data/replaced':
+      return action.data
     case 'workItem/created':
       return { ...state, workItems: [...state.workItems, action.workItem] }
     case 'workItem/updated':
