@@ -19,8 +19,9 @@ Requires Node 22.12+ (the repo pins an exact Node 24 release in `.nvmrc`; run `n
 | `npm test` | Vitest, single run |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run build` | Typecheck and production build to `dist/` |
+| `npm run test:e2e` | Playwright smoke test against the production build on port 4317 (run `npx playwright install chromium` once) |
 
-CI (`.github/workflows/ci.yml`) runs lint, typecheck, test and build on every PR and on pushes to `main`.
+CI (`.github/workflows/ci.yml`) runs two jobs on every PR and on pushes to `main`: `check` (lint, typecheck, test, build) and `e2e` (Playwright). Testing approach: `docs/testing-strategy.md`.
 
 Deploys: Cloudflare Pages Git integration. `main` → production, every PR → preview URL. See `docs/deployment.md`.
 

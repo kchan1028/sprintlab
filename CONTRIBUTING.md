@@ -33,4 +33,4 @@ npm install
 npm run dev
 ```
 
-Before opening a PR, run `npm run lint`, `npm run typecheck` and `npm test`. CI runs the same checks plus a production build.
+Before opening a PR, run `npm run lint`, `npm run typecheck` and `npm test`. CI runs the same checks, a production build, and the Playwright smoke test (`npm run test:e2e`). See [docs/testing-strategy.md](docs/testing-strategy.md).
