@@ -68,6 +68,29 @@ describe('loadData', () => {
     expect(loadData()).toEqual({ ok: false, error: 'corrupt', raw })
   })
 
+  it('reports corrupt data when a record has the wrong field types', () => {
+    const raw = JSON.stringify({
+      ...sample,
+      workItems: [
+        {
+          id: 'w1',
+          projectId: 'p1',
+          type: 'story',
+          title: 'Hand-edited',
+          description: '',
+          priority: 'medium',
+          acceptanceCriteria: null,
+          status: 'backlog',
+          sprintId: null,
+          createdAt: 'T',
+          updatedAt: 'T',
+        },
+      ],
+    })
+    localStorage.setItem(STORAGE_KEY, raw)
+    expect(loadData()).toEqual({ ok: false, error: 'corrupt', raw })
+  })
+
   it('refuses data from a newer schema version and keeps the raw value', () => {
     const raw = JSON.stringify({ ...sample, schemaVersion: CURRENT_SCHEMA_VERSION + 1 })
     localStorage.setItem(STORAGE_KEY, raw)

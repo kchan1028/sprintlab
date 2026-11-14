@@ -112,7 +112,17 @@ body {
   border: 1px solid #cf222e;
   border-radius: 6px;
   padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
   background-color: #fff5f5;
+}
+
+.save-error h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.save-error p {
+  margin: 0 0 0.5rem;
 }
 
 .actions {
