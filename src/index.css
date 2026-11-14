@@ -452,3 +452,64 @@ fieldset.field legend {
   text-decoration: underline;
   cursor: pointer;
 }
+
+.danger-panel {
+  border: 1px solid #cf222e;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+}
+
+.danger-panel h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}
+
+.danger-panel p {
+  margin: 0 0 0.75rem;
+  color: inherit;
+}
+
+.danger-button {
+  font: inherit;
+  color: #ffffff;
+  background-color: #cf222e;
+  border: 1px solid #a40e26;
+  border-radius: 4px;
+  padding: 0.125rem 0.5rem;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.main-nav {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1.5rem;
+}
+
+.main-nav a[aria-current='page'] {
+  font-weight: 600;
+  text-decoration: none;
+  color: #1f2328;
+}
+
+.data-section {
+  border-top: 1px solid #d0d7de;
+  padding-top: 0.5rem;
+  margin-top: 1rem;
+}
+
+.data-section h3 {
+  margin-bottom: 0.25rem;
+}
+
+.danger-panel h4 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+}

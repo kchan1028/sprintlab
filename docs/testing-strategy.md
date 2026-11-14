@@ -7,7 +7,7 @@ SprintLab is a single-user app with no backend, so most risk sits in **domain ru
 | Layer | Tool | What it covers | Where | Runs |
 |---|---|---|---|---|
 | Domain unit tests | Vitest | Pure rules: validation, status and sprint rules, assignment, completion, date handling, filters | `src/domain/*.test.ts` | `npm test`, CI `check` |
-| Storage and state | Vitest | Load/save/reset, schema version, per-record validation, reducer actions | `src/repository/*.test.ts`, `src/state/*.test.ts` | `npm test`, CI `check` |
+| Storage and state | Vitest | Load/save/reset, schema version, per-record validation, import integrity checks, reducer actions | `src/repository/*.test.ts`, `src/state/*.test.ts` | `npm test`, CI `check` |
 | Component and flow tests | Vitest + Testing Library + jsdom | User-visible behaviour through the whole app (`renderApp(path)`): forms, errors, focus, persistence across a remount | `src/**/*.test.tsx` | `npm test`, CI `check` |
 | Accessibility (automated) | axe-core in jsdom | Names, roles, labels and structure on every main screen and form. **Not** color contrast (jsdom has no layout). | `src/features/Accessibility.test.tsx` | `npm test`, CI `check` |
 | End-to-end smoke test | Playwright (Chromium) | The main flow in a real browser against the **production build**: create project, add item, move to Done, reload | `e2e/*.e2e.ts` | `npm run test:e2e`, CI `e2e` |

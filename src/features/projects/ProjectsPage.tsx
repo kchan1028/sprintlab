@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router'
+import { useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router'
 import { createProject, updateProject, type ProjectInput } from '../../domain/project'
 import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useFocusReturn } from '../../lib/useFocusReturn'
@@ -17,6 +17,11 @@ export function ProjectsPage() {
   const [editing, setEditing] = useState<Editing>({ mode: 'none' })
   const { returnTo, focusTarget } = useFocusReturn()
   useDocumentTitle('Projects')
+  const location = useLocation()
+  // Set by a page that sent the user here after a change, e.g. deleting a project.
+  const announcement = (location.state as { announcement?: string } | null)?.announcement
+  // Focus the announcement once per navigation, not on every re-render.
+  const announcedFor = useRef<string | null>(null)
 
   /** Closes the form and sends focus back to the button that opened it. */
   const close = () => {
@@ -45,6 +50,22 @@ export function ProjectsPage() {
           </button>
         )}
       </div>
+
+      {announcement && (
+        <p
+          className="announcement"
+          role="status"
+          tabIndex={-1}
+          ref={(el) => {
+            if (el && announcedFor.current !== location.key) {
+              announcedFor.current = location.key
+              el.focus()
+            }
+          }}
+        >
+          {announcement}
+        </p>
+      )}
 
       {editing.mode === 'create' && (
         <ProjectForm title="New project" submitLabel="Create project" onSubmit={handleCreate} onCancel={close} />

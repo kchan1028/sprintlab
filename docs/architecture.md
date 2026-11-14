@@ -27,6 +27,7 @@ React Router 8 in declarative mode (`BrowserRouter` + `Routes`). Cloudflare Page
 |---|---|
 | `/` | Projects list |
 | `/projects/:projectId` | Project page: sprints (create, start, complete, review and retro, item counts) and the board with five status columns. `?sprint=none` or `?sprint=<id>` filters the board (unknown id → all items; unknown project → "Project not found") |
+| `/data` | Your data: export all data as JSON, import a backup (validated, previewed, replaces everything after confirmation) |
 | `*` | Page not found |
 
 ## Data model
@@ -89,7 +90,8 @@ erDiagram
 - A project has at most one `active` sprint. Sprints are created `planned`; starting one is blocked while another in the same project is active.
 - Sprint dates are `YYYY-MM-DD` and the end date can't be before the start. New sprints default to a one-week range starting the day after the latest sprint ends (or today).
 - Work items can be assigned only to a `planned` or `active` sprint in the same project. Items already in a `completed` sprint keep showing it, but nothing new can be assigned to it.
-- Deleting a project deletes its work items and sprints.
+- Deleting a project (after an inline confirmation showing what will go) deletes its work items and sprints.
+- Import uses the same parser as loading (`parseAppData`) plus cross-record checks (`integrityProblem`: unique ids, references within a project, at most one active sprint). Import **replaces** all data rather than merging, so ids can't collide. Invalid files change nothing.
 - Completing an active sprint (one save) keeps Done items in it and moves unfinished items to the product backlog (`sprintId: null`) or to a planned sprint in the same project; items keep their status.
 - A completed sprint is read-only except its review and retro, which stay editable.
 - Data is stored under one localStorage key as a single JSON document. Loading checks the top-level shape **and every record's fields and types** (`src/repository/validate.ts`). If anything fails, the app shows a recoverable error and offers a download of the raw data or a reset. It never silently overwrites.

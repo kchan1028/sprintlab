@@ -56,3 +56,40 @@ export function isSprint(v: unknown): v is Sprint {
 export function hasValidRecords(data: AppData): boolean {
   return data.projects.every(isProject) && data.workItems.every(isWorkItem) && data.sprints.every(isSprint)
 }
+
+/**
+ * Cross-record checks for imported files: unique ids, and every reference
+ * points at something that exists in the same project. Returns a reason, or null.
+ * Not applied on load, so one dangling reference can't lock someone out of their data.
+ */
+export function integrityProblem(data: AppData): string | null {
+  for (const [label, list] of [
+    ['project', data.projects],
+    ['work item', data.workItems],
+    ['sprint', data.sprints],
+  ] as const) {
+    const ids = new Set<string>()
+    for (const record of list) {
+      if (ids.has(record.id)) return `Two ${label}s share the id “${record.id}”.`
+      ids.add(record.id)
+    }
+  }
+
+  const projectIds = new Set(data.projects.map((p) => p.id))
+  const sprintProject = new Map(data.sprints.map((s) => [s.id, s.projectId]))
+
+  for (const s of data.sprints) {
+    if (!projectIds.has(s.projectId)) return `Sprint “${s.name}” belongs to a project that isn't in the file.`
+  }
+  for (const w of data.workItems) {
+    if (!projectIds.has(w.projectId)) return `Work item “${w.title}” belongs to a project that isn't in the file.`
+    if (w.sprintId !== null && sprintProject.get(w.sprintId) !== w.projectId) {
+      return `Work item “${w.title}” points to a sprint that isn't in its project.`
+    }
+  }
+  for (const projectId of projectIds) {
+    const active = data.sprints.filter((s) => s.projectId === projectId && s.state === 'active')
+    if (active.length > 1) return 'A project has more than one active sprint.'
+  }
+  return null
+}
