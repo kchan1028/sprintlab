@@ -10,6 +10,8 @@ export type AppAction =
   | { type: 'sprint/updated'; sprint: Sprint }
   /** Removes a project with its work items and sprints. */
   | { type: 'project/deleted'; projectId: string }
+  /** Adds a whole project's records at once, e.g. the demo project. */
+  | { type: 'records/added'; project: Project; sprints: Sprint[]; workItems: WorkItem[] }
   /** Replaces all data, e.g. after an import. */
   | { type: 'data/replaced'; data: AppData }
   /** Completes a sprint and moves its unfinished items in one save. */
@@ -27,6 +29,13 @@ export function appReducer(state: AppData, action: AppAction): AppData {
       return { ...state, projects: replaceById(state.projects, action.project) }
     case 'project/deleted':
       return deleteProject(state, action.projectId)
+    case 'records/added':
+      return {
+        ...state,
+        projects: [...state.projects, action.project],
+        sprints: [...state.sprints, ...action.sprints],
+        workItems: [...state.workItems, ...action.workItems],
+      }
     case 'data/replaced':
       return action.data
     case 'workItem/created':

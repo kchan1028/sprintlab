@@ -4,6 +4,7 @@ import { backupFilename, downloadText } from '../../lib/download'
 import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useAppData } from '../../state/useAppData'
 import { MAX_IMPORT_BYTES, TOO_LARGE_MESSAGE, checkImport, summarize } from './importFile'
+import { useAddDemo } from './useAddDemo'
 
 type ImportState =
   | { kind: 'idle' }
@@ -17,6 +18,7 @@ export function DataPage() {
   const [status, setStatus] = useState<string | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
   const statusRef = useRef<HTMLParagraphElement>(null)
+  const addDemo = useAddDemo()
 
   function announce(message: string) {
     setStatus(message)
@@ -89,6 +91,17 @@ export function DataPage() {
         <p>Download all projects, work items and sprints as a JSON file ({summarize(data)}).</p>
         <button type="button" onClick={exportAll}>
           Download all data
+        </button>
+      </section>
+
+      <section aria-labelledby="demo-heading" className="data-section">
+        <h3 id="demo-heading">Demo data</h3>
+        <p>
+          Add a sample project based on SprintLab’s own backlog, with completed, active and planned sprints. It’s added
+          next to your projects; delete it any time.
+        </p>
+        <button type="button" onClick={() => announce(`Added the demo project “${addDemo()}”.`)}>
+          Add demo project
         </button>
       </section>
 
