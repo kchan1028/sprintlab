@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import { createProject, updateProject, type ProjectInput } from '../../domain/project'
 import { useAppData } from '../../state/useAppData'
 import { ProjectForm } from './ProjectForm'
@@ -58,7 +59,9 @@ export function ProjectsPage() {
             ) : (
               <li key={project.id} className="project-row">
                 <div>
-                  <h3>{project.name}</h3>
+                  <h3>
+                    <Link to={`/projects/${project.id}`}>{project.name}</Link>
+                  </h3>
                   {project.description && <p>{project.description}</p>}
                 </div>
                 {editing.mode === 'none' && (

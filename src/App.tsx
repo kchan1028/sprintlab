@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { Route, Routes } from 'react-router'
+import { NotFound } from './components/NotFound'
 import { SaveErrorBanner } from './components/SaveErrorBanner'
 import { StorageError } from './components/StorageError'
+import { ProjectPage } from './features/projects/ProjectPage'
 import { ProjectsPage } from './features/projects/ProjectsPage'
 import { loadData, resetData, type LoadResult } from './repository/storage'
 import { AppDataProvider } from './state/AppDataProvider'
@@ -30,7 +33,11 @@ function App() {
       {loaded.ok ? (
         <AppDataProvider initialData={loaded.data}>
           <SaveStatus />
-          <ProjectsPage />
+          <Routes>
+            <Route path="/" element={<ProjectsPage />} />
+            <Route path="/projects/:projectId" element={<ProjectPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </AppDataProvider>
       ) : (
         <StorageError error={loaded.error} raw={loaded.raw} onReset={handleReset} />

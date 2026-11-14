@@ -31,3 +31,4 @@ Supporting choices: React Router for routing, `useReducer` + Context for state, 
 - **Linter:** the current Vite React template (create-vite 9) ships oxlint, not ESLint. We kept oxlint: less config and much faster, with the React hooks rules we need. `--deny-warnings` makes warnings fail CI.
 - **Formatter:** Prettier is deferred. One developer, and lint plus typecheck catch what matters. Revisit if formatting churn shows up in diffs.
 - **Node:** Vitest 5 and jsdom 31 require Node 22.12+. The repo pins Node 24 (`.nvmrc`), and CI reads the same file.
+- **Router (#7):** React Router 8 in declarative mode. v8's breaking changes (ESM-only, `react-router-dom` removed, Node 22.22+) affect data and framework mode, not the `BrowserRouter`/`Routes` API used here.
