@@ -25,4 +25,12 @@ An issue is done when:
 
 ## Local setup
 
-Added with the app scaffold (#3).
+Requires Node 22.12 or newer. The repo pins Node 24 in `.nvmrc`.
+
+```bash
+nvm use
+npm install
+npm run dev
+```
+
+Before opening a PR, run `npm run lint`, `npm run typecheck` and `npm test`. CI runs the same checks plus a production build.
