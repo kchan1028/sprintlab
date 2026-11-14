@@ -1,4 +1,5 @@
 import type { AppData } from '../domain/types'
+import { hasValidRecords } from './validate'
 
 export const STORAGE_KEY = 'sprintlab:data'
 export const CURRENT_SCHEMA_VERSION = 1
@@ -56,6 +57,34 @@ function migrate(data: AppData): AppData {
   return current
 }
 
+export type ParseResult = { ok: true; data: AppData } | { ok: false; error: 'corrupt' | 'unsupported_version' }
+
+/**
+ * Turns stored or imported JSON text into checked, migrated AppData.
+ * Shared by loading and import, so both apply the same rules.
+ */
+export function parseAppData(raw: string): ParseResult {
+  let parsed: unknown
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    return { ok: false, error: 'corrupt' }
+  }
+
+  if (!isAppDataShape(parsed)) return { ok: false, error: 'corrupt' }
+  if (parsed.schemaVersion > CURRENT_SCHEMA_VERSION) return { ok: false, error: 'unsupported_version' }
+
+  let data: AppData
+  try {
+    data = migrate(parsed)
+  } catch {
+    return { ok: false, error: 'corrupt' }
+  }
+  // Check every record after migrating, so components never see a wrongly typed field.
+  if (!hasValidRecords(data)) return { ok: false, error: 'corrupt' }
+  return { ok: true, data }
+}
+
 /** Reads app data. Never throws: problems come back as a LoadResult error. */
 export function loadData(storage: KeyValueStorage = defaultStorage()): LoadResult {
   let raw: string | null
@@ -66,24 +95,8 @@ export function loadData(storage: KeyValueStorage = defaultStorage()): LoadResul
   }
 
   if (raw === null) return { ok: true, data: emptyData() }
-
-  let parsed: unknown
-  try {
-    parsed = JSON.parse(raw)
-  } catch {
-    return { ok: false, error: 'corrupt', raw }
-  }
-
-  if (!isAppDataShape(parsed)) return { ok: false, error: 'corrupt', raw }
-  if (parsed.schemaVersion > CURRENT_SCHEMA_VERSION) {
-    return { ok: false, error: 'unsupported_version', raw }
-  }
-
-  try {
-    return { ok: true, data: migrate(parsed) }
-  } catch {
-    return { ok: false, error: 'corrupt', raw }
-  }
+  const result = parseAppData(raw)
+  return result.ok ? result : { ok: false, error: result.error, raw }
 }
 
 function isQuotaError(err: unknown): boolean {

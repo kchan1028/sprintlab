@@ -127,7 +127,7 @@ describe('Projects', () => {
     })
     renderApp()
     await createProject('Unsaved')
-    expect(screen.getByRole('alert')).toHaveTextContent('Browser storage is full')
+    expect(screen.getByRole('alert', { name: 'Changes not saved' })).toHaveTextContent('Browser storage is full')
     expect(screen.getByRole('heading', { name: 'Unsaved' })).toBeInTheDocument()
   })
 })

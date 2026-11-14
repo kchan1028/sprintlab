@@ -1,3 +1,4 @@
+import { downloadText } from '../lib/download'
 import type { LoadError } from '../repository/storage'
 
 const messages: Record<LoadError, { title: string; detail: string }> = {
@@ -22,19 +23,15 @@ interface StorageErrorProps {
   error: LoadError
   raw: string | null
   onReset: () => void
+  /** Shown when the last reset attempt could not remove the data. */
+  resetFailed?: boolean
 }
 
 function downloadRaw(raw: string) {
-  const url = URL.createObjectURL(new Blob([raw], { type: 'application/json' }))
-  const link = document.createElement('a')
-  link.href = url
-  link.download = 'sprintlab-data-backup.json'
-  link.click()
-  // Revoking in the same tick can cancel the download in some browsers.
-  setTimeout(() => URL.revokeObjectURL(url), 0)
+  downloadText('sprintlab-data-backup.json', raw)
 }
 
-export function StorageError({ error, raw, onReset }: StorageErrorProps) {
+export function StorageError({ error, raw, onReset, resetFailed = false }: StorageErrorProps) {
   const { title, detail } = messages[error]
   const canRecover = error !== 'unavailable'
 
@@ -42,6 +39,12 @@ export function StorageError({ error, raw, onReset }: StorageErrorProps) {
     <section role="alert" aria-labelledby="storage-error-title" className="storage-error">
       <h2 id="storage-error-title">{title}</h2>
       <p>{detail}</p>
+      {resetFailed && (
+        <p className="field-error">
+          Reset didn't work: the browser blocked access to storage. Allow site data for this page, reload, and try
+          again.
+        </p>
+      )}
       {canRecover && (
         <div className="actions">
           {raw !== null && (

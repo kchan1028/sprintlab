@@ -18,6 +18,7 @@ import {
   type SprintInput,
 } from '../../domain/sprint'
 import type { Project, Sprint } from '../../domain/types'
+import { useFocusReturn } from '../../lib/useFocusReturn'
 import { useAppData } from '../../state/useAppData'
 import { CompleteSprintPanel } from './CompleteSprintPanel'
 import { SprintForm } from './SprintForm'
@@ -44,6 +45,17 @@ export function SprintsSection({ project }: { project: Project }) {
   const [startError, setStartError] = useState<{ sprintId: string; reason: string } | null>(null)
   const [announcement, setAnnouncement] = useState<string | null>(null)
   const announcementRef = useRef<HTMLParagraphElement>(null)
+  const { returnTo, focusTarget } = useFocusReturn()
+
+  function closeCreate() {
+    returnTo('new')
+    setCreating(false)
+  }
+
+  function closePanel() {
+    if (panel) returnTo(`${panel.kind}-${panel.sprintId}`)
+    setPanel(null)
+  }
   const sprints = sortSprints(data.sprints.filter((s) => s.projectId === project.id))
 
   function announce(message: string) {
@@ -58,7 +70,7 @@ export function SprintsSection({ project }: { project: Project }) {
 
   function handleCreate(input: SprintInput) {
     dispatch({ type: 'sprint/created', sprint: createSprint(input, project.id, crypto.randomUUID()) })
-    setCreating(false)
+    closeCreate()
   }
 
   function handleStart(sprint: Sprint) {
@@ -101,7 +113,7 @@ export function SprintsSection({ project }: { project: Project }) {
       <div className="section-header">
         <h2 id="sprints-heading">Sprints</h2>
         {!creating && (
-          <button type="button" onClick={() => setCreating(true)}>
+          <button type="button" ref={focusTarget('new')} onClick={() => setCreating(true)}>
             New sprint
           </button>
         )}
@@ -114,7 +126,7 @@ export function SprintsSection({ project }: { project: Project }) {
       )}
 
       {creating && (
-        <SprintForm initial={defaultInput(sprints)} onSubmit={handleCreate} onCancel={() => setCreating(false)} />
+        <SprintForm initial={defaultInput(sprints)} onSubmit={handleCreate} onCancel={closeCreate} />
       )}
 
       {sprints.length === 0 ? (
@@ -134,8 +146,10 @@ export function SprintsSection({ project }: { project: Project }) {
                       <span className={`state state-${sprint.state}`}>{SPRINT_STATE_LABELS[sprint.state]}</span>
                     </h3>
                     <p className="item-meta">
-                      {formatDateRange(sprint.startDate, sprint.endDate)} · {plural(items.length, 'item', 'items')}
-                      {sprint.state === 'completed' && ` · ${plural(items.length - unfinished.length, 'done', 'done')}`}
+                      {formatDateRange(sprint.startDate, sprint.endDate)} ·{' '}
+                      {sprint.state === 'completed'
+                        ? `${plural(items.length, 'item', 'items')} done`
+                        : plural(items.length, 'item', 'items')}
                     </p>
                     <p>
                       <strong>Goal:</strong> {sprint.goal}
@@ -156,6 +170,7 @@ export function SprintsSection({ project }: { project: Project }) {
                       {sprint.state === 'active' && (
                         <button
                           type="button"
+                          ref={focusTarget(`complete-${sprint.id}`)}
                           aria-label={`Complete ${sprint.name}`}
                           onClick={() => {
                             setAnnouncement(null)
@@ -168,7 +183,9 @@ export function SprintsSection({ project }: { project: Project }) {
                       {sprint.state !== 'planned' && (
                         <button
                           type="button"
-                          aria-label={`Review and retro for ${sprint.name}`}
+                          ref={focusTarget(`notes-${sprint.id}`)}
+                          // Accessible name starts with the visible text so voice control can target it.
+                          aria-label={`${hasNotes(sprint) ? 'Edit' : 'Add'} review and retro for ${sprint.name}`}
                           onClick={() => {
                             setAnnouncement(null)
                             setPanel({ sprintId: sprint.id, kind: 'notes' })
@@ -188,14 +205,14 @@ export function SprintsSection({ project }: { project: Project }) {
                     unfinishedCount={unfinished.length}
                     nextPlanned={nextPlannedSprint(sprint, data.sprints)}
                     onConfirm={(carry) => handleComplete(sprint, carry)}
-                    onCancel={() => setPanel(null)}
+                    onCancel={closePanel}
                   />
                 )}
                 {open === 'notes' && (
                   <SprintNotesForm
                     sprint={sprint}
                     onSave={(notes) => handleSaveNotes(sprint, notes)}
-                    onCancel={() => setPanel(null)}
+                    onCancel={closePanel}
                   />
                 )}
 
