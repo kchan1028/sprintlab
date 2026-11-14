@@ -2,7 +2,7 @@
 
 A small project and bug tracker for a solo developer, built in the open as a learning project. SprintLab is used to manage its own development.
 
-**Status:** Sprint 1 (Foundation) complete: projects and work items can be created and edited. See the [Sprint 1 review](docs/sprints/sprint-1.md).
+**Status:** Sprint 2 (Core workflow) complete: board, sprints, planning, completion, review and retro. See the [Sprint 2 review](docs/sprints/sprint-2.md).
 
 - Work is tracked in [issues](../../issues), grouped by sprint milestones.
 - How work is done: [CONTRIBUTING.md](CONTRIBUTING.md)
