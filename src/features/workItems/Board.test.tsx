@@ -37,7 +37,8 @@ afterEach(() => {
 describe('Board', () => {
   it('shows five columns in workflow order with counts', () => {
     renderApp('/projects/p1')
-    const headings = screen.getAllByRole('heading', { level: 3 }).map((h) => h.textContent)
+    const board = screen.getByRole('region', { name: 'Board' })
+    const headings = within(board).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)
     expect(headings).toEqual(['Backlog (1)', 'Ready (0)', 'In Progress (1)', 'Review (0)', 'Done (0)'])
   })
 

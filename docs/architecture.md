@@ -26,7 +26,7 @@ React Router 8 in declarative mode (`BrowserRouter` + `Routes`). Cloudflare Page
 | Path | Screen |
 |---|---|
 | `/` | Projects list |
-| `/projects/:projectId` | Project page with its board: five status columns (unknown id → "Project not found") |
+| `/projects/:projectId` | Project page: sprints (create, start) and the board with five status columns (unknown id → "Project not found") |
 | `*` | Page not found |
 
 ## Data model
@@ -86,7 +86,8 @@ erDiagram
 
 ### Rules
 
-- A project has at most one `active` sprint.
+- A project has at most one `active` sprint. Sprints are created `planned`; starting one is blocked while another in the same project is active.
+- Sprint dates are `YYYY-MM-DD` and the end date can't be before the start. New sprints default to a one-week range starting the day after the latest sprint ends (or today).
 - Deleting a project deletes its work items and sprints.
 - Completing a sprint moves unfinished items back to the backlog (`sprintId: null`) or into the next sprint.
 - Data is stored under one localStorage key as a single JSON document. If it fails to parse or validate, the app shows a recoverable error and offers export of the raw data or a reset. It never silently overwrites.
