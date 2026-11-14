@@ -26,7 +26,7 @@ React Router 8 in declarative mode (`BrowserRouter` + `Routes`). Cloudflare Page
 | Path | Screen |
 |---|---|
 | `/` | Projects list |
-| `/projects/:projectId` | Project page: sprints (create, start, item counts) and the board with five status columns. `?sprint=none` or `?sprint=<id>` filters the board (unknown id → all items; unknown project → "Project not found") |
+| `/projects/:projectId` | Project page: sprints (create, start, complete, review and retro, item counts) and the board with five status columns. `?sprint=none` or `?sprint=<id>` filters the board (unknown id → all items; unknown project → "Project not found") |
 | `*` | Page not found |
 
 ## Data model
@@ -90,5 +90,6 @@ erDiagram
 - Sprint dates are `YYYY-MM-DD` and the end date can't be before the start. New sprints default to a one-week range starting the day after the latest sprint ends (or today).
 - Work items can be assigned only to a `planned` or `active` sprint in the same project. Items already in a `completed` sprint keep showing it, but nothing new can be assigned to it.
 - Deleting a project deletes its work items and sprints.
-- Completing a sprint moves unfinished items back to the backlog (`sprintId: null`) or into the next sprint.
+- Completing an active sprint (one save) keeps Done items in it and moves unfinished items to the product backlog (`sprintId: null`) or to a planned sprint in the same project; items keep their status.
+- A completed sprint is read-only except its review and retro, which stay editable.
 - Data is stored under one localStorage key as a single JSON document. If it fails to parse or validate, the app shows a recoverable error and offers export of the raw data or a reset. It never silently overwrites.
