@@ -4,6 +4,7 @@ import {
   cleanCriteria,
   createWorkItem,
   emptyWorkItemInput,
+  moveWorkItem,
   toWorkItemInput,
   updateWorkItem,
   validateWorkItem,
@@ -85,5 +86,17 @@ describe('toWorkItemInput', () => {
   it('gives the form one empty criterion row when an item has none', () => {
     const item = createWorkItem(input({ acceptanceCriteria: [] }), 'p1', 'w1', 'T1')
     expect(toWorkItemInput(item).acceptanceCriteria).toEqual([''])
+  })
+})
+
+describe('moveWorkItem', () => {
+  it('changes status and updatedAt only', () => {
+    const item = createWorkItem(input(), 'p1', 'w1', 'T1')
+    expect(moveWorkItem(item, 'in_progress', 'T2')).toEqual({ ...item, status: 'in_progress', updatedAt: 'T2' })
+  })
+
+  it('returns the same object when the status is unchanged', () => {
+    const item = createWorkItem(input(), 'p1', 'w1', 'T1')
+    expect(moveWorkItem(item, 'backlog', 'T2')).toBe(item)
   })
 })

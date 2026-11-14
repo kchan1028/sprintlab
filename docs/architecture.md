@@ -26,7 +26,7 @@ React Router 8 in declarative mode (`BrowserRouter` + `Routes`). Cloudflare Page
 | Path | Screen |
 |---|---|
 | `/` | Projects list |
-| `/projects/:projectId` | Project page with its work items (unknown id → "Project not found") |
+| `/projects/:projectId` | Project page with its board: five status columns (unknown id → "Project not found") |
 | `*` | Page not found |
 
 ## Data model
