@@ -8,6 +8,8 @@ export interface AppDataContextValue {
   dispatch: Dispatch<AppAction>
   /** Set when the most recent save failed; cleared by the next successful save. */
   saveError: SaveError | null
+  /** Tries to save the current data again after a failed save. */
+  retrySave: () => void
 }
 
 export const AppDataContext = createContext<AppDataContextValue | null>(null)

@@ -1,4 +1,5 @@
 import type { AppData } from '../domain/types'
+import { hasValidRecords } from './validate'
 
 export const STORAGE_KEY = 'sprintlab:data'
 export const CURRENT_SCHEMA_VERSION = 1
@@ -79,11 +80,15 @@ export function loadData(storage: KeyValueStorage = defaultStorage()): LoadResul
     return { ok: false, error: 'unsupported_version', raw }
   }
 
+  let data: AppData
   try {
-    return { ok: true, data: migrate(parsed) }
+    data = migrate(parsed)
   } catch {
     return { ok: false, error: 'corrupt', raw }
   }
+  // Check every record after migrating, so components never see a wrongly typed field.
+  if (!hasValidRecords(data)) return { ok: false, error: 'corrupt', raw }
+  return { ok: true, data }
 }
 
 function isQuotaError(err: unknown): boolean {

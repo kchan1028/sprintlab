@@ -92,4 +92,6 @@ erDiagram
 - Deleting a project deletes its work items and sprints.
 - Completing an active sprint (one save) keeps Done items in it and moves unfinished items to the product backlog (`sprintId: null`) or to a planned sprint in the same project; items keep their status.
 - A completed sprint is read-only except its review and retro, which stay editable.
-- Data is stored under one localStorage key as a single JSON document. If it fails to parse or validate, the app shows a recoverable error and offers export of the raw data or a reset. It never silently overwrites.
+- Data is stored under one localStorage key as a single JSON document. Loading checks the top-level shape **and every record's fields and types** (`src/repository/validate.ts`). If anything fails, the app shows a recoverable error and offers a download of the raw data or a reset. It never silently overwrites.
+- If a save fails (storage full or blocked), changes stay in memory. A banner offers **Try saving again** and **Download a copy**, and the browser asks for confirmation before the tab closes.
+- An error boundary around the routes replaces a blank page with a recovery message (reload, download a copy).

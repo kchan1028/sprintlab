@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Route, Routes } from 'react-router'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { NotFound } from './components/NotFound'
 import { SaveErrorBanner } from './components/SaveErrorBanner'
 import { StorageError } from './components/StorageError'
@@ -16,14 +17,16 @@ function SaveStatus() {
 
 function App() {
   const [loaded, setLoaded] = useState<LoadResult>(() => loadData())
+  const [resetFailed, setResetFailed] = useState(false)
 
   function handleReset() {
     const confirmed = window.confirm(
       'Reset deletes all SprintLab data saved in this browser. This cannot be undone. Continue?',
     )
     if (!confirmed) return
-    resetData()
-    setLoaded(loadData())
+    const result = resetData()
+    setResetFailed(!result.ok)
+    if (result.ok) setLoaded(loadData())
   }
 
   return (
@@ -33,14 +36,16 @@ function App() {
       {loaded.ok ? (
         <AppDataProvider initialData={loaded.data}>
           <SaveStatus />
-          <Routes>
-            <Route path="/" element={<ProjectsPage />} />
-            <Route path="/projects/:projectId" element={<ProjectPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <ErrorBoundary>
+            <Routes>
+              <Route path="/" element={<ProjectsPage />} />
+              <Route path="/projects/:projectId" element={<ProjectPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ErrorBoundary>
         </AppDataProvider>
       ) : (
-        <StorageError error={loaded.error} raw={loaded.raw} onReset={handleReset} />
+        <StorageError error={loaded.error} raw={loaded.raw} onReset={handleReset} resetFailed={resetFailed} />
       )}
     </main>
   )
