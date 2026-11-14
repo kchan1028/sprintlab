@@ -61,7 +61,7 @@ describe('Sprints', () => {
 
     const region = sprintsRegion()
     expect(within(region).getByRole('heading', { name: 'Sprint 1 Planned' })).toBeInTheDocument()
-    expect(within(region).getByText('Nov 16 – Nov 22, 2026')).toBeInTheDocument()
+    expect(within(region).getByText('Nov 16 – Nov 22, 2026 · 0 items')).toBeInTheDocument()
     expect(within(region).getByText('Board works end to end')).toBeInTheDocument()
     expect(storedSprints()).toMatchObject([
       { projectId: 'p1', name: 'Sprint 1', goal: 'Board works end to end', state: 'planned' },

@@ -23,6 +23,11 @@ export function SprintsSection({ project }: { project: Project }) {
   const [startError, setStartError] = useState<{ sprintId: string; reason: string } | null>(null)
   const sprints = sortSprints(data.sprints.filter((s) => s.projectId === project.id))
 
+  function itemCountLabel(sprintId: string) {
+    const count = data.workItems.filter((w) => w.sprintId === sprintId).length
+    return count === 1 ? '1 item' : `${count} items`
+  }
+
   function handleCreate(input: SprintInput) {
     dispatch({ type: 'sprint/created', sprint: createSprint(input, project.id, crypto.randomUUID()) })
     setCreating(false)
@@ -63,7 +68,9 @@ export function SprintsSection({ project }: { project: Project }) {
                 <h3>
                   {sprint.name} <span className={`state state-${sprint.state}`}>{SPRINT_STATE_LABELS[sprint.state]}</span>
                 </h3>
-                <p className="item-meta">{formatDateRange(sprint.startDate, sprint.endDate)}</p>
+                <p className="item-meta">
+                  {formatDateRange(sprint.startDate, sprint.endDate)} · {itemCountLabel(sprint.id)}
+                </p>
                 <p>
                   <strong>Goal:</strong> {sprint.goal}
                 </p>
