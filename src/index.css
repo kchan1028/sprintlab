@@ -14,3 +14,21 @@ body {
   margin: 0 auto;
   padding: 2rem 1rem;
 }
+
+.storage-error {
+  border: 1px solid #cf222e;
+  border-radius: 6px;
+  padding: 1rem;
+  background-color: #fff5f5;
+}
+
+.storage-error h2 {
+  margin-top: 0;
+  font-size: 1.125rem;
+}
+
+.storage-error .actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
