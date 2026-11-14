@@ -4,6 +4,7 @@ import { createProject, updateProject, type ProjectInput } from '../../domain/pr
 import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useFocusReturn } from '../../lib/useFocusReturn'
 import { useAppData } from '../../state/useAppData'
+import { useAddDemo } from '../data/useAddDemo'
 import { ProjectForm } from './ProjectForm'
 
 type Editing = { mode: 'none' } | { mode: 'create' } | { mode: 'edit'; projectId: string }
@@ -16,6 +17,7 @@ export function ProjectsPage() {
   const { data, dispatch } = useAppData()
   const [editing, setEditing] = useState<Editing>({ mode: 'none' })
   const { returnTo, focusTarget } = useFocusReturn()
+  const addDemo = useAddDemo()
   useDocumentTitle('Projects')
   const location = useLocation()
   // Set by a page that sent the user here after a change, e.g. deleting a project.
@@ -72,7 +74,18 @@ export function ProjectsPage() {
       )}
 
       {data.projects.length === 0 ? (
-        editing.mode !== 'create' && <p className="empty-state">No projects yet.</p>
+        editing.mode !== 'create' && (
+          <div className="empty-state">
+            <p>No projects yet.</p>
+            <p>
+              Create one, or{' '}
+              <button type="button" className="link-button" onClick={addDemo}>
+                add a demo project
+              </button>{' '}
+              to explore with sample sprints and work items.
+            </p>
+          </div>
+        )
       ) : (
         <ul className="project-list">
           {data.projects.map((project) =>
