@@ -138,6 +138,18 @@ describe('Import', () => {
     expect(stored()).toEqual(current)
   })
 
+  it('refuses an oversized file without reading it', async () => {
+    const user = userEvent.setup()
+    renderApp('/data')
+    const big = file(backup, 'huge.json')
+    Object.defineProperty(big, 'size', { value: 6 * 1024 * 1024 })
+    const read = vi.spyOn(big, 'text')
+    await user.upload(screen.getByLabelText('Backup file (.json)'), big)
+    expect(await screen.findByRole('alert')).toHaveTextContent('huge.json wasn’t imported. This file is larger than 5 MB')
+    expect(read).not.toHaveBeenCalled()
+    expect(stored()).toEqual(current)
+  })
+
   it('round-trips: an exported file imports back to the same data', async () => {
     const user = userEvent.setup()
     renderApp('/data')

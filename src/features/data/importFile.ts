@@ -4,13 +4,14 @@ import { integrityProblem } from '../../repository/validate'
 
 /** Larger than any realistic SprintLab backup, and near browser storage limits. */
 export const MAX_IMPORT_BYTES = 5 * 1024 * 1024
+export const TOO_LARGE_MESSAGE = 'This file is larger than 5 MB, which is too large for a SprintLab backup.'
 
 export type ImportCheck = { ok: true; data: AppData } | { ok: false; message: string }
 
 /** Validates a backup file's text with the same rules as loading, plus cross-record checks. */
 export function checkImport(text: string, sizeBytes: number): ImportCheck {
   if (sizeBytes > MAX_IMPORT_BYTES) {
-    return { ok: false, message: 'This file is larger than 5 MB, which is too large for a SprintLab backup.' }
+    return { ok: false, message: TOO_LARGE_MESSAGE }
   }
   const parsed = parseAppData(text)
   if (!parsed.ok) {

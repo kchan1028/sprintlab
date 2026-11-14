@@ -3,7 +3,7 @@ import type { AppData } from '../../domain/types'
 import { backupFilename, downloadText } from '../../lib/download'
 import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useAppData } from '../../state/useAppData'
-import { checkImport, summarize } from './importFile'
+import { MAX_IMPORT_BYTES, TOO_LARGE_MESSAGE, checkImport, summarize } from './importFile'
 
 type ImportState =
   | { kind: 'idle' }
@@ -33,6 +33,11 @@ export function DataPage() {
     setStatus(null)
     const file = event.target.files?.[0]
     if (!file) return
+    // Refuse oversized files before reading them into memory.
+    if (file.size > MAX_IMPORT_BYTES) {
+      setImportState({ kind: 'error', fileName: file.name, message: TOO_LARGE_MESSAGE })
+      return
+    }
     let text: string
     try {
       text = await file.text()
