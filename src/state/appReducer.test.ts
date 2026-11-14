@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { createProject, updateProject } from '../domain/project'
+import { createSprint } from '../domain/sprint'
 import { createWorkItem, emptyWorkItemInput } from '../domain/workItem'
 import { emptyData } from '../repository/storage'
 import { appReducer } from './appReducer'
@@ -41,5 +42,21 @@ describe('appReducer work items', () => {
     state = appReducer(state, { type: 'workItem/updated', workItem: edited })
     expect(state.workItems).toEqual([edited])
     expect(state.projects).toEqual([project])
+  })
+})
+
+describe('appReducer sprint completion', () => {
+  it('updates the sprint and moved items together, leaving other items alone', () => {
+    const keep = createWorkItem({ ...emptyWorkItemInput(), title: 'Keep' }, 'p1', 'w1', 'T1')
+    const move = createWorkItem({ ...emptyWorkItemInput(), title: 'Move' }, 'p1', 'w2', 'T1')
+    const sprint = { ...createSprint({ name: 'S', goal: 'G', startDate: '2026-11-16', endDate: '2026-11-22' }, 'p1', 's1'), state: 'active' as const }
+    const state = { ...emptyData(), sprints: [sprint], workItems: [keep, { ...move, sprintId: 's1' }] }
+    const next = appReducer(state, {
+      type: 'sprint/completed',
+      sprint: { ...sprint, state: 'completed' },
+      movedItems: [{ ...move, sprintId: null, updatedAt: 'T2' }],
+    })
+    expect(next.sprints[0].state).toBe('completed')
+    expect(next.workItems).toEqual([keep, { ...move, sprintId: null, updatedAt: 'T2' }])
   })
 })

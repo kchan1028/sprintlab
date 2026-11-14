@@ -1,4 +1,12 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import {
+  completeSprint,
+  nextPlannedSprint,
+  unfinishedItems,
+  updateSprintNotes,
+  type CarryOver,
+  type SprintNotes,
+} from '../../domain/completion'
 import { formatDateRange, toDateString } from '../../domain/dates'
 import {
   SPRINT_STATE_LABELS,
@@ -11,21 +19,41 @@ import {
 } from '../../domain/sprint'
 import type { Project, Sprint } from '../../domain/types'
 import { useAppData } from '../../state/useAppData'
+import { CompleteSprintPanel } from './CompleteSprintPanel'
 import { SprintForm } from './SprintForm'
+import { SprintNotesForm } from './SprintNotesForm'
+
+type Panel = { sprintId: string; kind: 'notes' | 'complete' } | null
 
 function defaultInput(existing: Sprint[]): SprintInput {
   return { name: `Sprint ${existing.length + 1}`, goal: '', ...defaultSprintDates(existing, toDateString(new Date())) }
 }
 
+function hasNotes(sprint: Sprint) {
+  return Boolean(sprint.review || sprint.retro.wentWell || sprint.retro.toImprove || sprint.retro.actions)
+}
+
+function plural(n: number, one: string, many: string) {
+  return `${n} ${n === 1 ? one : many}`
+}
+
 export function SprintsSection({ project }: { project: Project }) {
   const { data, dispatch } = useAppData()
   const [creating, setCreating] = useState(false)
+  const [panel, setPanel] = useState<Panel>(null)
   const [startError, setStartError] = useState<{ sprintId: string; reason: string } | null>(null)
+  const [announcement, setAnnouncement] = useState<string | null>(null)
+  const announcementRef = useRef<HTMLParagraphElement>(null)
   const sprints = sortSprints(data.sprints.filter((s) => s.projectId === project.id))
 
-  function itemCountLabel(sprintId: string) {
-    const count = data.workItems.filter((w) => w.sprintId === sprintId).length
-    return count === 1 ? '1 item' : `${count} items`
+  function announce(message: string) {
+    setAnnouncement(message)
+    // Move focus to the confirmation so keyboard and screen-reader users hear the result.
+    requestAnimationFrame(() => announcementRef.current?.focus())
+  }
+
+  function itemsIn(sprintId: string) {
+    return data.workItems.filter((w) => w.sprintId === sprintId)
   }
 
   function handleCreate(input: SprintInput) {
@@ -43,6 +71,31 @@ export function SprintsSection({ project }: { project: Project }) {
     dispatch({ type: 'sprint/updated', sprint: startSprint(sprint) })
   }
 
+  function handleComplete(sprint: Sprint, carryOver: CarryOver) {
+    const result = completeSprint(sprint, data.sprints, data.workItems, carryOver, new Date().toISOString())
+    if (!result.ok) {
+      setStartError({ sprintId: sprint.id, reason: result.reason })
+      return
+    }
+    dispatch({ type: 'sprint/completed', sprint: result.sprint, movedItems: result.movedItems })
+    setPanel(null)
+    setStartError(null)
+    const moved = result.movedItems.length
+    const target =
+      carryOver.kind === 'sprint' ? data.sprints.find((s) => s.id === carryOver.sprintId)?.name : 'the product backlog'
+    announce(
+      moved === 0
+        ? `${sprint.name} completed. Add its review and retro below.`
+        : `${sprint.name} completed. ${plural(moved, 'unfinished item', 'unfinished items')} moved to ${target}.`,
+    )
+  }
+
+  function handleSaveNotes(sprint: Sprint, notes: SprintNotes) {
+    dispatch({ type: 'sprint/updated', sprint: updateSprintNotes(sprint, notes) })
+    setPanel(null)
+    announce(`Review and retro saved for ${sprint.name}.`)
+  }
+
   return (
     <section aria-labelledby="sprints-heading" className="sprints">
       <div className="section-header">
@@ -54,6 +107,12 @@ export function SprintsSection({ project }: { project: Project }) {
         )}
       </div>
 
+      {announcement && (
+        <p ref={announcementRef} tabIndex={-1} role="status" className="announcement">
+          {announcement}
+        </p>
+      )}
+
       {creating && (
         <SprintForm initial={defaultInput(sprints)} onSubmit={handleCreate} onCancel={() => setCreating(false)} />
       )}
@@ -62,31 +121,115 @@ export function SprintsSection({ project }: { project: Project }) {
         !creating && <p className="empty-state">No sprints yet. Create one to plan a week of work.</p>
       ) : (
         <ul className="sprint-list">
-          {sprints.map((sprint) => (
-            <li key={sprint.id} className={`sprint-row sprint-${sprint.state}`}>
-              <div>
-                <h3>
-                  {sprint.name} <span className={`state state-${sprint.state}`}>{SPRINT_STATE_LABELS[sprint.state]}</span>
-                </h3>
-                <p className="item-meta">
-                  {formatDateRange(sprint.startDate, sprint.endDate)} · {itemCountLabel(sprint.id)}
-                </p>
-                <p>
-                  <strong>Goal:</strong> {sprint.goal}
-                </p>
-                {startError?.sprintId === sprint.id && (
-                  <p role="alert" className="field-error">
-                    {startError.reason}
-                  </p>
+          {sprints.map((sprint) => {
+            const items = itemsIn(sprint.id)
+            const unfinished = unfinishedItems(sprint, data.workItems)
+            const open = panel?.sprintId === sprint.id ? panel.kind : null
+            return (
+              <li key={sprint.id} className={`sprint-row sprint-${sprint.state}`}>
+                <div className="sprint-summary">
+                  <div>
+                    <h3>
+                      {sprint.name}{' '}
+                      <span className={`state state-${sprint.state}`}>{SPRINT_STATE_LABELS[sprint.state]}</span>
+                    </h3>
+                    <p className="item-meta">
+                      {formatDateRange(sprint.startDate, sprint.endDate)} · {plural(items.length, 'item', 'items')}
+                      {sprint.state === 'completed' && ` · ${plural(items.length - unfinished.length, 'done', 'done')}`}
+                    </p>
+                    <p>
+                      <strong>Goal:</strong> {sprint.goal}
+                    </p>
+                    {startError?.sprintId === sprint.id && (
+                      <p role="alert" className="field-error">
+                        {startError.reason}
+                      </p>
+                    )}
+                  </div>
+                  {open === null && (
+                    <div className="actions">
+                      {sprint.state === 'planned' && (
+                        <button type="button" aria-label={`Start ${sprint.name}`} onClick={() => handleStart(sprint)}>
+                          Start sprint
+                        </button>
+                      )}
+                      {sprint.state === 'active' && (
+                        <button
+                          type="button"
+                          aria-label={`Complete ${sprint.name}`}
+                          onClick={() => {
+                            setAnnouncement(null)
+                            setPanel({ sprintId: sprint.id, kind: 'complete' })
+                          }}
+                        >
+                          Complete sprint
+                        </button>
+                      )}
+                      {sprint.state !== 'planned' && (
+                        <button
+                          type="button"
+                          aria-label={`Review and retro for ${sprint.name}`}
+                          onClick={() => {
+                            setAnnouncement(null)
+                            setPanel({ sprintId: sprint.id, kind: 'notes' })
+                          }}
+                        >
+                          {hasNotes(sprint) ? 'Edit review and retro' : 'Add review and retro'}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {open === 'complete' && (
+                  <CompleteSprintPanel
+                    sprint={sprint}
+                    doneCount={items.length - unfinished.length}
+                    unfinishedCount={unfinished.length}
+                    nextPlanned={nextPlannedSprint(sprint, data.sprints)}
+                    onConfirm={(carry) => handleComplete(sprint, carry)}
+                    onCancel={() => setPanel(null)}
+                  />
                 )}
-              </div>
-              {sprint.state === 'planned' && (
-                <button type="button" aria-label={`Start ${sprint.name}`} onClick={() => handleStart(sprint)}>
-                  Start sprint
-                </button>
-              )}
-            </li>
-          ))}
+                {open === 'notes' && (
+                  <SprintNotesForm
+                    sprint={sprint}
+                    onSave={(notes) => handleSaveNotes(sprint, notes)}
+                    onCancel={() => setPanel(null)}
+                  />
+                )}
+
+                {open !== 'notes' && hasNotes(sprint) && (
+                  <dl className="sprint-notes">
+                    {sprint.review && (
+                      <>
+                        <dt>Review</dt>
+                        <dd>{sprint.review}</dd>
+                      </>
+                    )}
+                    {sprint.retro.wentWell && (
+                      <>
+                        <dt>Went well</dt>
+                        <dd>{sprint.retro.wentWell}</dd>
+                      </>
+                    )}
+                    {sprint.retro.toImprove && (
+                      <>
+                        <dt>To improve</dt>
+                        <dd>{sprint.retro.toImprove}</dd>
+                      </>
+                    )}
+                    {sprint.retro.actions && (
+                      <>
+                        <dt>Actions</dt>
+                        <dd>{sprint.retro.actions}</dd>
+                      </>
+                    )}
+                  </dl>
+                )}
+              </li>
+            )
+          })}
         </ul>
       )}
     </section>
