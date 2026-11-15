@@ -4,9 +4,9 @@ A small project and bug tracker for one developer: a backlog, a five-column boar
 
 ![SprintLab project page with sprints and the board](docs/screenshots/project-board.png)
 
-**Status:** feature-complete for v1.0.0; release in progress (Sprint 4). Reviews: [Sprint 1](docs/sprints/sprint-1.md), [Sprint 2](docs/sprints/sprint-2.md), [Sprint 3](docs/sprints/sprint-3.md).
+**Status:** v1.0.0 release candidate; tagging waits for the owner's OK ([release notes](docs/releases/v1.0.0.md)). Reviews: [Sprint 1](docs/sprints/sprint-1.md), [Sprint 2](docs/sprints/sprint-2.md), [Sprint 3](docs/sprints/sprint-3.md).
 
-**Demo:** _not linked yet._ The app deploys to Cloudflare Pages ([deployment guide](docs/deployment.md)), but the public URL hasn't been confirmed. Until then, run it locally (below) and choose **add a demo project**.
+**Demo:** no hosted demo link in v1.0.0. The app deploys to Cloudflare Pages ([deployment guide](docs/deployment.md)), but the public URL wasn't verified. Run it locally (below) and choose **add a demo project**.
 
 ## The problem
 
@@ -57,7 +57,7 @@ Open the printed URL and choose **add a demo project** to explore with sample sp
 
 - **Process:** four planned one-week sprints, one issue per branch and PR, a Definition of Done in [CONTRIBUTING.md](CONTRIBUTING.md), and a written review and retro after each sprint ([docs/sprints/](docs/sprints/)).
 - **AI assistance:** Claude Code wrote most of the code and docs, under the owner's direction and approval. Every PR carries an AI review labelled as such, never presented as a peer review. Decisions, corrections and mistakes (including the AI's) are in the [AI collaboration log](docs/ai-collaboration-log.md). Conventions for the AI: [CLAUDE.md](CLAUDE.md).
-- **Honest limits:** Sprints 1–3 all ran on one day, so they say nothing about real weekly capacity. There's been no screen-reader test yet. The deployed site isn't verified (checks were local by choice).
+- **Honest limits:** Sprints 1–3 all ran on one day, so they say nothing about real weekly capacity. The VoiceOver check was skipped for v1.0.0, so it's untested with a screen reader. The deployed site isn't verified (checks were local by choice).
 - **Case study:** [docs/case-study.md](docs/case-study.md).
 
 ## Learning outcomes
