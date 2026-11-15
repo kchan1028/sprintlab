@@ -1,6 +1,6 @@
 # Case study: SprintLab
 
-_Draft based on the repository's actual record as of 2026-11-14 (before v1.0.0 is tagged). Numbers come from GitHub and local runs; the owner's own reflections are still to be added._
+_Based on the repository's actual record at [v1.0.0](https://github.com/kchan1028/sprintlab/releases/tag/v1.0.0) (2026-11-15). Numbers come from GitHub and local runs. The owner's own reflections are still to be added._
 
 ## Summary
 
@@ -20,12 +20,13 @@ See the [README](../README.md) and the [v1.0.0 notes](releases/v1.0.0.md). In sh
 
 | | |
 |---|---|
-| Issues | 17 planned (16 core + 1 stretch); 15 closed so far |
-| Pull requests | 19 merged, 1 deliberately failing PR closed to prove CI blocks it |
+| Issues | 17 planned (16 core + 1 stretch); all 16 core issues closed, stretch not started |
+| Pull requests | 23 merged (including this wrap-up), 1 deliberately failing PR closed to prove CI blocks it |
 | Tests | 208 Vitest + 1 Playwright; ~2,800 lines of app code, ~2,200 lines of tests |
-| CI | 39 successful runs, 1 failure (the deliberate one), 2 cancelled (superseded pushes) |
+| CI | 45 successful runs before this wrap-up, 1 failure (the deliberate one), 2 cancelled (superseded pushes) |
 | Runtime dependencies | 3 (`react`, `react-dom`, `react-router`) |
-| Calendar time | Sprints 1–3 all on 2026-11-14, in one long AI-assisted session |
+| Calendar time | All four sprints in one AI-assisted session, 2026-11-14 to 15 |
+| Release | [v1.0.0](https://github.com/kchan1028/sprintlab/releases/tag/v1.0.0), tagged on a commit with both CI jobs green |
 
 **Process:** each issue had acceptance criteria; each PR recorded evidence (check output, mutation checks, local browser checks) and an AI review labelled as AI. Each sprint ended with a written review and retro whose actions fed the next sprint.
 
@@ -49,7 +50,11 @@ See the [README](../README.md) and the [v1.0.0 notes](releases/v1.0.0.md). In sh
 ## Evidence quality
 
 - Every new kind of check was shown to fail before being trusted (CI with a failing PR, the axe helper, the e2e test, mutation checks per PR). One mutation that failed nothing was reported and explained, not hidden.
-- Known gaps are listed rather than rounded up: no screen-reader test yet, Chromium only, deployed site not verified, sprints compressed into one day.
+- Known gaps are listed rather than rounded up: no screen-reader test (skipped for v1.0.0), no hosted demo, Chromium only, sprints compressed into one session.
+
+## Outcome against the final sprint goal
+
+The v1.0.0 goal was only partly met: the release, the README and the honest evidence are done, but "try it online" and "tried with a screen reader" are not. See the [Sprint 4 review](sprints/sprint-4.md).
 
 ## Owner reflections
 
