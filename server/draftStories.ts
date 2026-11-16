@@ -53,7 +53,9 @@ export function userPrompt(draft: DraftRequest): string {
 }
 
 export const callClaude: CallModel = async (apiKey, draft) => {
-  const client = new Anthropic({ apiKey, timeout: 45_000, maxRetries: 1 })
+  // One attempt that ends before the browser's 60 s limit, so nothing keeps running (and billing) after
+  // the user has been told it timed out. The user can retry.
+  const client = new Anthropic({ apiKey, timeout: 50_000, maxRetries: 0 })
   const response = await client.beta.messages.create({
     model: DRAFT_MODEL,
     max_tokens: 8000,
@@ -102,6 +104,9 @@ export async function handleDraftStories(
   // Requiring JSON means a cross-site browser post needs a CORS preflight, which this endpoint never grants.
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) {
     return json({ error: MESSAGES.wrongType }, 415)
+  }
+  if (Number(request.headers.get('Content-Length') ?? 0) > MAX_BODY_CHARS) {
+    return json({ error: MESSAGES.tooLarge }, 413)
   }
   const raw = await request.text()
   if (raw.length > MAX_BODY_CHARS) return json({ error: MESSAGES.tooLarge }, 413)

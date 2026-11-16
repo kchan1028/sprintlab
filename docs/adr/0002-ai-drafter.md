@@ -18,7 +18,7 @@ The stretch goal turns a rough feature request into draft user stories with acce
 
 Option 1, with these choices:
 
-- **Model:** `claude-opus-5-5` (the current default model), `effort: "low"`, structured output against a JSON schema, `max_tokens` 8,000, a 45-second server timeout with one retry. Cheaper models (for example `claude-haiku-5-5`) were offered; the owner chose the default.
+- **Model:** `claude-opus-5-5` (the current default model), `effort: "low"`, structured output against a JSON schema, `max_tokens` 8,000, a single 50-second attempt (no retry, so it always ends before the browser's 60-second limit). Cheaper models (for example `claude-haiku-5-5`) were offered; the owner chose the default.
 - **Refusals:** the server-side fallback (`fallbacks: "default"`, beta `server-side-fallback-2026-07-01`) re-runs a refused request on another model; a refusal that still comes back is shown as a message.
 - **Validation twice:** the function checks the model's output, and the app checks the function's reply, with the same pure `parseDrafts` in `src/domain/drafts.ts`.
 - **Nothing saved without review:** drafts live in component state until the user adds them; one `workItems/added` action saves them together.
