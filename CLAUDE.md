@@ -13,7 +13,8 @@ Requires Node 22.12+ (the repo pins an exact Node 24 release in `.nvmrc`; run `n
 | Command | What it does |
 |---|---|
 | `npm install` | Install dependencies |
-| `npm run dev` | Start the dev server |
+| `npm run dev` | Start the dev server (AI drafter hidden: no function) |
+| `npm run dev:ai` | Build, then serve with the Pages Function on port 8788 (AI drafter; key from `.dev.vars`, see `.dev.vars.example`) |
 | `npm run lint` | oxlint; warnings fail the run |
 | `npm run typecheck` | TypeScript project check (`tsc -b`) |
 | `npm test` | Vitest, single run |

@@ -1,6 +1,6 @@
 # Deployment guide
 
-SprintLab is a static site hosted on **Cloudflare Pages** through its Git integration. There's no server and no secrets: Cloudflare builds directly from this GitHub repo.
+SprintLab is a static site hosted on **Cloudflare Pages** through its Git integration. Cloudflare builds directly from this GitHub repo. The only server code is the optional AI drafter's Pages Function, and production has no secrets set (see below).
 
 ## How deploys happen
 
@@ -35,6 +35,15 @@ Cloudflare also reports a build status check on each PR, next to the GitHub Acti
 1. Open the PR's Cloudflare comment or status check and follow the preview link.
 2. Confirm the SprintLab heading loads and the browser console has no errors.
 3. After merging, confirm the production URL shows the same change.
+
+## Pages Function and the API key (#17)
+
+Cloudflare builds `functions/` into a Pages Function at `/api/draft-stories` on every deploy. It reads one secret, `ANTHROPIC_API_KEY`.
+
+- **Production: no key is set, on purpose.** Without it the function answers `{ "enabled": false }` and the app hides the AI drafter. The app has no accounts, so an enabled public endpoint would let anyone spend the owner's credits ([ADR-0002](adr/0002-ai-drafter.md)).
+- **To enable it later:** first add abuse protection (rate limiting or Cloudflare Access), then Pages project → **Settings** → **Variables and Secrets** → add `ANTHROPIC_API_KEY` as a **Secret** for Production only, and redeploy.
+- **Locally:** copy `.dev.vars.example` to `.dev.vars`, add a key and run `npm run dev:ai` (port 8788). `.dev.vars` is gitignored.
+- Never use a `VITE_` variable for the key: Vite bundles those into the public JavaScript.
 
 ## Rollback
 

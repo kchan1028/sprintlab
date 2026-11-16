@@ -6,6 +6,8 @@ export type AppAction =
   | { type: 'project/updated'; project: Project }
   | { type: 'workItem/created'; workItem: WorkItem }
   | { type: 'workItem/updated'; workItem: WorkItem }
+  /** Adds several work items in one save, e.g. accepted AI drafts. */
+  | { type: 'workItems/added'; workItems: WorkItem[] }
   | { type: 'sprint/created'; sprint: Sprint }
   | { type: 'sprint/updated'; sprint: Sprint }
   /** Removes a project with its work items and sprints. */
@@ -42,6 +44,8 @@ export function appReducer(state: AppData, action: AppAction): AppData {
       return { ...state, workItems: [...state.workItems, action.workItem] }
     case 'workItem/updated':
       return { ...state, workItems: replaceById(state.workItems, action.workItem) }
+    case 'workItems/added':
+      return { ...state, workItems: [...state.workItems, ...action.workItems] }
     case 'sprint/created':
       return { ...state, sprints: [...state.sprints, action.sprint] }
     case 'sprint/updated':
