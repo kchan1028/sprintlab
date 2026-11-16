@@ -31,6 +31,14 @@ describe('appReducer', () => {
 })
 
 describe('appReducer work items', () => {
+  it('appends several work items at once, keeping existing ones', () => {
+    const one = createWorkItem({ ...emptyWorkItemInput(), title: 'One' }, 'p1', 'w1', 'T1')
+    const two = createWorkItem({ ...emptyWorkItemInput(), title: 'Two' }, 'p1', 'w2', 'T1')
+    const three = createWorkItem({ ...emptyWorkItemInput(), title: 'Three' }, 'p1', 'w3', 'T1')
+    const state = { ...emptyData(), workItems: [one] }
+    expect(appReducer(state, { type: 'workItems/added', workItems: [two, three] }).workItems).toEqual([one, two, three])
+  })
+
   it('adds and updates work items without touching projects', () => {
     const project = createProject({ name: 'A', description: '' }, 'p1', 'T1')
     const item = createWorkItem({ ...emptyWorkItemInput(), title: 'One' }, 'p1', 'w1', 'T1')

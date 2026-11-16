@@ -15,9 +15,18 @@ flowchart TD
   State --> Domain[domain/<br/>validation, status and sprint rules<br/>pure TS, unit-tested]
   State --> Repo[repository/<br/>load, save, migrate, export, import]
   Repo --> LS[(localStorage)]
-  UI -. stretch .-> Fn["/api/draft-stories<br/>serverless function"]
-  Fn -. stretch .-> Claude[Claude API]
+  UI -. optional .-> Fn["/api/draft-stories<br/>Pages Function"]
+  Fn -. optional .-> Claude[Claude API]
 ```
+
+## AI story drafter (#17, optional)
+
+The one server-side piece. Decision record: [ADR-0002](adr/0002-ai-drafter.md).
+
+- `functions/api/draft-stories.ts` is the Cloudflare Pages route; it calls `handleDraftStories` in `server/draftStories.ts`, which holds the logic and its tests (kept out of `functions/` so tests aren't routed).
+- `GET` returns `{ enabled }`, true only when `ANTHROPIC_API_KEY` is set. `POST { request, projectName, projectDescription }` returns `{ stories }` or `{ error }` with a status code.
+- `src/domain/drafts.ts` is shared by the app and the function: request limits, the output JSON schema and `parseDrafts`, which both sides use to check untrusted output.
+- `src/features/drafts/` renders the section only when the function reports a key. Drafts stay in component state until **Add to backlog** dispatches `workItems/added`, one save.
 
 ## Routes
 

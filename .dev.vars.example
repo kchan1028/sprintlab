@@ -1,0 +1,3 @@
+# Copy to .dev.vars (gitignored) to use the AI story drafter locally with `npm run dev:ai`.
+# Get a key at https://platform.claude.com/ . Never commit the real file.
+ANTHROPIC_API_KEY=

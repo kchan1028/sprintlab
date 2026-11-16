@@ -21,6 +21,7 @@ Solo developers track side-project work in scattered notes and TODO comments, sk
 - **Sprints:** a required goal, dates, one active sprint per project, assigning work, and filtering the board by sprint (kept in the URL).
 - **Completing a sprint:** unfinished work goes back to the product backlog or into the next sprint, in one save. Then record the review and retro.
 - **Your data:** export everything as JSON; import a backup (validated, previewed, and applied only after you confirm). Delete a project with a confirmation that shows what will go.
+- **AI story drafter (optional, local):** describe a feature and Claude drafts stories with acceptance criteria; you edit or discard each draft before anything is saved. Hidden unless a key is configured, so the rest of the app never depends on it. Runs with `npm run dev:ai` and a key in `.dev.vars` ([ADR-0002](docs/adr/0002-ai-drafter.md)).
 - **Safety:** data stays in your browser (localStorage). Failed saves keep your changes and offer retry and download; damaged data goes to a recovery screen instead of crashing the app.
 
 | Projects | Complete a sprint | Your data | Phone |
@@ -49,9 +50,9 @@ Open the printed URL and choose **add a demo project** to explore with sample sp
 
 ## How it's built
 
-- **Stack:** React 19, TypeScript 7, Vite 8, React Router 8. The only runtime dependencies are `react`, `react-dom` and `react-router`. Why: [ADR-0001](docs/adr/0001-stack.md).
+- **Stack:** React 19, TypeScript 7, Vite 8, React Router 8. The app's runtime dependencies are `react`, `react-dom` and `react-router`; the optional AI drafter's Pages Function adds `@anthropic-ai/sdk`. Why: [ADR-0001](docs/adr/0001-stack.md), [ADR-0002](docs/adr/0002-ai-drafter.md).
 - **Architecture:** components dispatch actions; rules live in pure functions under `src/domain/`; only `src/repository/` touches storage. Details: [architecture and data model](docs/architecture.md).
-- **Quality:** 208 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [testing strategy](docs/testing-strategy.md).
+- **Quality:** 248 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [testing strategy](docs/testing-strategy.md).
 
 ## How it was made
 

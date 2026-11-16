@@ -5,6 +5,7 @@ import { backupFilename, downloadText } from '../../lib/download'
 import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useFocusReturn } from '../../lib/useFocusReturn'
 import { useAppData } from '../../state/useAppData'
+import { DraftStoriesSection } from '../drafts/DraftStoriesSection'
 import { SprintsSection } from '../sprints/SprintsSection'
 import { WorkItemsSection } from '../workItems/WorkItemsSection'
 import { DeleteProjectPanel } from './DeleteProjectPanel'
@@ -79,6 +80,7 @@ export function ProjectPage() {
       </header>
       <SprintsSection project={project} />
       <WorkItemsSection project={project} />
+      <DraftStoriesSection project={project} />
     </>
   )
 }
