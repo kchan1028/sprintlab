@@ -29,3 +29,30 @@ Closes #
 - [ ] Reviewed (self / AI review, labelled)
 - [ ] AI collaboration log updated if AI meaningfully helped
 - [ ] No credentials committed
+
+## Change summary
+
+What changed:
+Why:
+Product impact (PRODUCT.md):
+Roadmap impact (roadmap.md):
+Feature impact (feature.md):
+Security impact (SECURITY.md):
+Audit impact (AUDIT.md):
+Docs updated:
+Test plan:
+Status:
+Open questions:
+
+## Verification record
+
+Author:
+Verifier: Pending
+Tested commit:
+Author checks:
+Verifier checks:
+Remaining gaps:
+
+- [ ] `npm run check:docs` passes
+- [ ] Document impacts and Test plan line are accurate
+- [ ] Owner approval received before merge

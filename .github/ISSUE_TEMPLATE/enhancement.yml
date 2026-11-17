@@ -1,0 +1,16 @@
+name: Feature or change request
+description: Ask for new or different behavior.
+labels: ["type: feature"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Who is affected, what goes wrong today, and how you will know a change worked.
+    validations:
+      required: true
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Related requirement or roadmap item
+      description: Link the PRODUCT.md or roadmap.md section, or say none exists.

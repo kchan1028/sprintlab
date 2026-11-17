@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "screenshots": "SCREENSHOTS=1 playwright test e2e/screenshots.e2e.ts"
+    "screenshots": "SCREENSHOTS=1 playwright test e2e/screenshots.e2e.ts",
+    "check:docs": "node scripts/check-doc-links.mjs",
+    "test:docs": "node --test scripts/check-doc-links.fixtures.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "1.5.0",

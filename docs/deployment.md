@@ -47,9 +47,7 @@ Cloudflare also reports a build status check on each PR, next to the GitHub Acti
 
 ## Checking a deploy
 
-1. Open the PR's Cloudflare comment or status check and follow the preview link.
-2. Confirm the SprintLab heading loads and the browser console has no errors.
-3. After merging, confirm the production URL shows the same change.
+Runtime verification is local only by owner decision. Use the PR's local verification steps and record the tested commit and actual results. Do not check production or preview URLs unless the owner explicitly changes that policy. Publishing and a successful build do not establish runtime verification. Release evidence remains in the [release checklist](release-checklist.md).
 
 ## Pages Function and the API key (#17)
 

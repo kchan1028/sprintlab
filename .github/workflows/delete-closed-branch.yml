@@ -1,0 +1,59 @@
+name: Delete branch of closed pull request
+
+# Disabled until the owner explicitly opts in with a repository variable.
+# No code from the PR is checked out or executed.
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    name: Delete closed branch
+    if: >-
+      vars.DELETE_CLOSED_BRANCHES == 'true' &&
+      !github.event.pull_request.merged &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref != github.event.repository.default_branch &&
+      github.event.pull_request.head.ref != github.event.pull_request.base.ref
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Check branch ownership and delete
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          ref=$(jq -rn --arg b "$BRANCH" '$b | split("/") | map(@uri) | join("/")')
+          # Skip a branch that was reused or is protected. Other API errors fail visibly.
+          if info=$(gh api "repos/$GH_REPO/branches/$ref" 2>&1); then
+            if [ "$(jq -r '.protected' <<< "$info")" = true ]; then
+              echo 'Protected branch; keeping it.'
+              exit 0
+            fi
+            if [ "$(jq -r '.commit.sha' <<< "$info")" != "$EXPECTED_SHA" ]; then
+              echo 'Branch changed after the PR; keeping it.'
+              exit 0
+            fi
+          elif [[ "$info" == *'HTTP 404'* ]]; then
+            echo 'Branch already absent.'
+            exit 0
+          else
+            echo "$info" >&2
+            exit 1
+          fi
+          open=$(gh api --method GET "repos/$GH_REPO/pulls" -f state=open -f "head=${GH_REPO%%/*}:$BRANCH" --jq 'length')
+          if [ "$open" != 0 ]; then
+            echo 'Branch has an open PR; keeping it.'
+            exit 0
+          fi
+          gh api --method DELETE "repos/$GH_REPO/git/refs/heads/$ref"

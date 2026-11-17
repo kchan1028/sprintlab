@@ -1,0 +1,15 @@
+name: Documentation problem
+description: Something in the documentation is wrong, missing, or unclear.
+body:
+  - type: input
+    id: file
+    attributes:
+      label: File and section
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong and what it should say
+    validations:
+      required: true
