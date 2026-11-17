@@ -28,7 +28,10 @@ The repository documents SprintLab's use in planning its own development. Local 
 
 - Projects contain stories and bugs with titles, descriptions, priorities, and acceptance criteria.
 - The board has five statuses: Backlog, Ready, In Progress, Review, and Done. Labelled controls change status without requiring drag-and-drop.
-- Sprints have a required goal and dates. Only one sprint per project can be active. Board sprint filters are kept in the URL.
+- Sprints have a required goal and dates. Only one sprint per project can be active. The active goal and board lead the project page; upcoming sprints and collapsible completed history follow. Completion opens history and announces the result without losing keyboard focus.
+- With no explicit URL filter, the board shows the active sprint when one exists, otherwise all items. Explicit `?sprint=all`, `none`, and valid sprint IDs remain authoritative; unknown IDs show all. New items stay unassigned and are revealed in the no-sprint view if the current filter would hide them.
+- Status remains directly editable. A Details and sprint disclosure provides assignment, description, and acceptance criteria without entering Edit. On phones, jump links reach populated statuses and empty columns are omitted; every status remains available through each item's status control.
+- Appearance offers System, Light, and Dark. System follows the browser/OS preference. A saved appearance applies before the app mounts, independently of project data; blocked preference storage falls back safely and reports when a choice cannot be remembered.
 - Completing a sprint sends unfinished work to the product backlog or the next sprint in one save, followed by review and retro notes.
 - Data persists in localStorage behind a repository module. Failed saves retain changes and offer retry and download; damaged data receives a recovery screen.
 - JSON import is validated and previewed before confirmed replacement. Project deletion requires confirmation showing its scope.
@@ -72,6 +75,7 @@ These describe the existing release, not newly proposed features. Verification e
 3. **Completion:** given an active sprint with unfinished work, completing it keeps Done work in the completed sprint and moves unfinished items to the chosen allowed destination in one save. Review and retro remain editable.
 4. **Data safety:** given a valid JSON backup, import previews replacement and waits for confirmation. Invalid imports change nothing. Failed persistence retains in-memory changes with retry and download actions; corrupt stored data receives a recovery screen.
 5. **Optional drafts:** given an available drafter, proposed stories remain unsaved until the user reviews and adds them. With no key, the core app remains usable and the drafter is hidden.
+6. **Appearance:** given a light, dark, or system choice, the interface and native controls use that appearance across routes and after reload. If preference storage fails, the choice still applies for the visit without altering project data or blocking recovery.
 
 ## Quality requirements
 

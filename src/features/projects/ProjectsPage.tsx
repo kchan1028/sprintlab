@@ -47,7 +47,7 @@ export function ProjectsPage() {
       <div className="section-header">
         <h2 id="projects-heading">Projects</h2>
         {editing.mode === 'none' && (
-          <button type="button" ref={focusTarget('new')} onClick={() => setEditing({ mode: 'create' })}>
+          <button type="button" className="primary-button" ref={focusTarget('new')} onClick={() => setEditing({ mode: 'create' })}>
             New project
           </button>
         )}

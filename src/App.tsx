@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Route, Routes } from 'react-router'
+import { AppearanceSelect } from './components/AppearanceSelect'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { NotFound } from './components/NotFound'
 import { SaveErrorBanner } from './components/SaveErrorBanner'
@@ -37,14 +38,17 @@ function App() {
           <h1>SprintLab</h1>
           <p>A small project and bug tracker for a solo developer.</p>
         </div>
-        {loaded.ok && (
-          <nav aria-label="Main" className="main-nav">
-            <NavLink to="/" end>
-              Projects
-            </NavLink>
-            <NavLink to="/data">Your data</NavLink>
-          </nav>
-        )}
+        <div className="header-controls">
+          {loaded.ok && (
+            <nav aria-label="Main" className="main-nav">
+              <NavLink to="/" end>
+                Projects
+              </NavLink>
+              <NavLink to="/data">Your data</NavLink>
+            </nav>
+          )}
+          <AppearanceSelect />
+        </div>
       </header>
       {loaded.ok ? (
         <AppDataProvider initialData={loaded.data}>

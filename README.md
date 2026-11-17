@@ -17,12 +17,17 @@ Solo developers track side-project work in scattered notes and TODO comments, sk
 ## What it does
 
 - **Projects** with stories and bugs: title, description, priority, acceptance criteria.
-- **Board:** Backlog → Ready → In Progress → Review → Done, changed with a labelled control, so no drag-and-drop is needed and it works by keyboard.
+- **Board:** active-sprint work first, with explicit All items access. Backlog → Ready → In Progress → Review → Done uses labelled controls rather than dragging. Details and sprint assignment expand when needed; completed sprint history stays below the work.
+- **Appearance:** choose System, Light, or Dark in the header. The browser remembers the choice separately from project backups.
 - **Sprints:** a required goal, dates, one active sprint per project, assigning work, and filtering the board by sprint (kept in the URL).
 - **Completing a sprint:** unfinished work goes back to the product backlog or into the next sprint, in one save. Then record the review and retro.
 - **Your data:** export everything as JSON; import a backup (validated, previewed, and applied only after you confirm). Delete a project with a confirmation that shows what will go.
 - **AI story drafter (optional, local):** describe a feature and Claude drafts stories with acceptance criteria; you edit or discard each draft before anything is saved. Hidden unless a key is configured, so the rest of the app never depends on it. Runs with `npm run dev:ai` and a key in `.dev.vars` ([ADR-0002](docs/adr/0002-ai-drafter.md)).
 - **Safety:** data stays in your browser (localStorage). Failed saves keep your changes and offer retry and download; damaged data goes to a recovery screen instead of crashing the app.
+
+| Light | Dark |
+|---|---|
+| ![Light workspace](docs/screenshots/project-board.png) | ![Dark workspace](docs/screenshots/project-board-dark.png) |
 
 | Projects | Complete a sprint | Your data | Phone |
 |---|---|---|---|
@@ -46,13 +51,13 @@ Open the printed URL and choose **add a demo project** to explore with sample sp
 | `npm run test:e2e` | Playwright smoke test against the production build (run `npx playwright install chromium` once) |
 | `npm run lint` / `npm run typecheck` | oxlint (warnings fail) / TypeScript |
 | `npm run build` | Production build to `dist/` |
-| `npm run screenshots` | Regenerate the screenshots above |
+| `npm run screenshots` | Regenerate the screenshots above in light and dark appearances |
 
 ## How it's built
 
 - **Stack:** React 19, TypeScript 7, Vite 8, React Router 8. The app's runtime dependencies are `react`, `react-dom` and `react-router`; the optional AI drafter's Pages Function adds `@anthropic-ai/sdk`. Why: [ADR-0001](docs/adr/0001-stack.md), [ADR-0002](docs/adr/0002-ai-drafter.md).
 - **Architecture:** components dispatch actions; rules live in pure functions under `src/domain/`; only `src/repository/` touches storage. Details: [architecture and data model](docs/architecture.md).
-- **Quality:** 249 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [test plan](docs/testing/test-plan.md).
+- **Quality:** 256 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [test plan](docs/testing/test-plan.md).
 
 ## How it was made
 

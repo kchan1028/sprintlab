@@ -17,6 +17,7 @@ Paths inspected 2026-11-17 against the current source. This is navigation; read 
 | Storage and state | `src/repository/`, `src/state/` | `src/domain/types.ts` | Storage, validation, and reducer tests |
 | Backup/import and demo | `src/features/data/` | `src/domain/demo.ts` | `DataSafety.test.tsx`, import and demo tests |
 | Drafter | `src/features/drafts/`, `functions/api/draft-stories.ts`, `server/draftStories.ts` | `src/domain/drafts.ts` | Client, UI, domain, and server tests |
+| Appearance | `src/components/AppearanceSelect.tsx`, `src/repository/appearance.ts` | Separate preference key; `src/main.tsx` applies it before mount | Appearance component tests and `e2e/workspace.e2e.ts` |
 | Accessibility and errors | `src/components/`, `src/test/axe.ts` | Shared focus and title helpers in `src/lib/` | Accessibility and error-state tests |
 | Styling | `src/index.css` | [Design baseline](../DESIGN.md) | Existing browser screenshots; no visual regression claim |
 | Documentation CI | `scripts/check-doc-links.mjs` | [Documentation guide](documentation-guide.md) | `npm run check:docs` |

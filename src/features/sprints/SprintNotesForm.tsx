@@ -47,7 +47,7 @@ export function SprintNotesForm({ sprint, onSave, onCancel }: SprintNotesFormPro
       {field('to-improve', 'What should improve?', 'Problems, not people.', toImprove, setToImprove)}
       {field('actions', 'Actions for next sprint', 'One or two concrete changes.', actions, setActions)}
       <div className="actions">
-        <button type="submit">Save review and retro</button>
+        <button type="submit" className="primary-button">Save review and retro</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>

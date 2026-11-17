@@ -159,6 +159,8 @@ describe('keyboard only', () => {
     await user.tab()
     expect(screen.getByRole('link', { name: 'Your data' })).toHaveFocus()
     await user.tab()
+    expect(screen.getByLabelText('Appearance')).toHaveFocus()
+    await user.tab()
     expect(screen.getByRole('button', { name: 'New project' })).toHaveFocus()
     await user.keyboard('{Enter}')
     expect(screen.getByLabelText('Name (required)')).toHaveFocus()

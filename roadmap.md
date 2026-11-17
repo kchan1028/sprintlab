@@ -11,8 +11,9 @@ This is the only current roadmap. Requirements live in [PRODUCT.md](PRODUCT.md);
 | Save recovery, JSON backup/import, project deletion | Implemented, released in v1.0.0 | [Sprint 3 record](docs/sprints/sprint-3.md), storage and data-safety tests |
 | Optional story drafter | Implemented, released in v1.1.0 | [Release notes](docs/releases/v1.1.0.md); successful real-key drafting remains unverified |
 | GitHub Pages demo | Implemented | [Deployment guide](docs/deployment.md#github-pages-demo-45); no production verification claimed |
-| Documentation ownership and link CI | In progress | [Issue #47](https://github.com/kchan1028/sprintlab/issues/47); independent verification Pending until reviewed |
-| Screen-reader and cross-browser validation | Planned | [Accessibility gaps](ACCESSIBILITY.md#known-limitations); no new product features committed |
+| Documentation ownership and link CI | Implemented | [Merged PR #48](https://github.com/kchan1028/sprintlab/pull/48); no independent verification inferred from merge alone |
+| Focused workspace and light/dark/system appearance | In progress | [Issue #49](https://github.com/kchan1028/sprintlab/issues/49); owner approved all five critique priorities and dark mode; local author checks are recorded in the PR |
+| Screen-reader and cross-browser validation | Planned | [Accessibility gaps](ACCESSIBILITY.md#known-limitations); no verification claim inferred from the interface pass |
 
 A released feature is not automatically Verified across every environment. Historical local results remain evidence for their tested commits; this scaffold does not rerun or upgrade them.
 
@@ -22,7 +23,7 @@ The initial solo Agile exercise is released. Future work uses one issue, one iso
 
 ## Priority definitions
 
-P0 blocks an explicitly approved release gate. P1 is expected work that may slip with an owner decision. P2 requires observed demand. No new feature priorities are assigned by this scaffold.
+P0 blocks an explicitly approved release gate. P1 is expected work that may slip with an owner decision. P2 requires observed demand. The owner approved the focused-workspace and appearance pass in issue #49; no further feature priorities are assigned.
 
 ## Responsibilities
 
@@ -45,4 +46,4 @@ P0 blocks an explicitly approved release gate. P1 is expected work that may slip
 
 ## Next actions
 
-Review this documentation PR and its check evidence. The owner then decides repository settings and any next release scope. No deployment, merge, live model call, or settings change is authorized by the scaffold.
+Review issue #49 and its local UI-check evidence. Independent verification remains Pending until a separate verifier reviews the tested commit. The owner decides merging, release scope, and repository settings; this work does not authorize deployment, live model calls, or settings changes.

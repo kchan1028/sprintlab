@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type ReactNode } from 'react'
 import {
   completeSprint,
   nextPlannedSprint,
@@ -38,9 +38,10 @@ function plural(n: number, one: string, many: string) {
   return `${n} ${n === 1 ? one : many}`
 }
 
-export function SprintsSection({ project }: { project: Project }) {
+export function SprintsSection({ project, children }: { project: Project; children?: ReactNode }) {
   const { data, dispatch } = useAppData()
   const [creating, setCreating] = useState(false)
+  const [historyOpen, setHistoryOpen] = useState(false)
   const [panel, setPanel] = useState<Panel>(null)
   const [startError, setStartError] = useState<{ sprintId: string; reason: string } | null>(null)
   const [announcement, setAnnouncement] = useState<string | null>(null)
@@ -89,6 +90,7 @@ export function SprintsSection({ project }: { project: Project }) {
       setStartError({ sprintId: sprint.id, reason: result.reason })
       return
     }
+    setHistoryOpen(true)
     dispatch({ type: 'sprint/completed', sprint: result.sprint, movedItems: result.movedItems })
     setPanel(null)
     setStartError(null)
@@ -108,147 +110,155 @@ export function SprintsSection({ project }: { project: Project }) {
     announce(`Review and retro saved for ${sprint.name}.`)
   }
 
-  return (
-    <section aria-labelledby="sprints-heading" className="sprints">
-      <div className="section-header">
-        <h2 id="sprints-heading">Sprints</h2>
-        {!creating && (
-          <button type="button" ref={focusTarget('new')} onClick={() => setCreating(true)}>
-            New sprint
-          </button>
+  function renderSprint(sprint: Sprint) {
+    const items = itemsIn(sprint.id)
+    const unfinished = unfinishedItems(sprint, data.workItems)
+    const startCheck = canStartSprint(sprint, data.sprints)
+    const open = panel?.sprintId === sprint.id ? panel.kind : null
+    return (
+      <li key={sprint.id} className={`sprint-row sprint-${sprint.state}`}>
+        <div className="sprint-summary">
+          <div>
+            <h3>
+              {sprint.name}{' '}
+              <span className={`state state-${sprint.state}`}>{SPRINT_STATE_LABELS[sprint.state]}</span>
+            </h3>
+            <p className="item-meta">
+              {formatDateRange(sprint.startDate, sprint.endDate)} ·{' '}
+              {sprint.state === 'completed'
+                ? `${plural(items.length, 'item', 'items')} done`
+                : plural(items.length, 'item', 'items')}
+            </p>
+            <p>
+              <strong>Goal:</strong> {sprint.goal}
+            </p>
+            {startError?.sprintId === sprint.id && (
+              <p role="alert" className="field-error">
+                {startError.reason}
+              </p>
+            )}
+          </div>
+          {open === null && (
+            <div className="actions">
+              {sprint.state === 'planned' && (
+                <button type="button" disabled={!startCheck.ok} aria-describedby={!startCheck.ok ? `start-help-${sprint.id}` : undefined} aria-label={`Start ${sprint.name}`} onClick={() => handleStart(sprint)}>
+                  Start sprint
+                </button>
+              )}
+              {sprint.state === 'active' && (
+                <button
+                  type="button"
+                  className="primary-button"
+                  ref={focusTarget(`complete-${sprint.id}`)}
+                  aria-label={`Complete ${sprint.name}`}
+                  onClick={() => {
+                    setAnnouncement(null)
+                    setPanel({ sprintId: sprint.id, kind: 'complete' })
+                  }}
+                >
+                  Complete sprint
+                </button>
+              )}
+              {sprint.state !== 'planned' && (
+                <button
+                  type="button"
+                  ref={focusTarget(`notes-${sprint.id}`)}
+                  // Accessible name starts with the visible text so voice control can target it.
+                  aria-label={`${hasNotes(sprint) ? 'Edit' : 'Add'} review and retro for ${sprint.name}`}
+                  onClick={() => {
+                    setAnnouncement(null)
+                    setPanel({ sprintId: sprint.id, kind: 'notes' })
+                  }}
+                >
+                  {hasNotes(sprint) ? 'Edit review and retro' : 'Add review and retro'}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        {sprint.state === 'planned' && !startCheck.ok && <p id={`start-help-${sprint.id}`} className="field-hint">{startCheck.reason}</p>}
+        {open === 'complete' && (
+          <CompleteSprintPanel
+            sprint={sprint}
+            doneCount={items.length - unfinished.length}
+            unfinishedCount={unfinished.length}
+            nextPlanned={nextPlannedSprint(sprint, data.sprints)}
+            onConfirm={(carry) => handleComplete(sprint, carry)}
+            onCancel={closePanel}
+          />
         )}
-      </div>
+        {open === 'notes' && (
+          <SprintNotesForm
+            sprint={sprint}
+            onSave={(notes) => handleSaveNotes(sprint, notes)}
+            onCancel={closePanel}
+          />
+        )}
 
-      {announcement && (
-        <p ref={announcementRef} tabIndex={-1} role="status" className="announcement">
-          {announcement}
-        </p>
+        {open !== 'notes' && hasNotes(sprint) && (
+          <dl className="sprint-notes">
+            {sprint.review && (
+              <>
+                <dt>Review</dt>
+                <dd>{sprint.review}</dd>
+              </>
+            )}
+            {sprint.retro.wentWell && (
+              <>
+                <dt>Went well</dt>
+                <dd>{sprint.retro.wentWell}</dd>
+              </>
+            )}
+            {sprint.retro.toImprove && (
+              <>
+                <dt>To improve</dt>
+                <dd>{sprint.retro.toImprove}</dd>
+              </>
+            )}
+            {sprint.retro.actions && (
+              <>
+                <dt>Actions</dt>
+                <dd>{sprint.retro.actions}</dd>
+              </>
+            )}
+          </dl>
+        )}
+      </li>
+    )
+  }
+
+  const active = sprints.filter((sprint) => sprint.state === 'active')
+  const planned = sprints.filter((sprint) => sprint.state === 'planned')
+  const completed = sprints.filter((sprint) => sprint.state === 'completed')
+
+  return (
+    <>
+      <section aria-label="Sprints" className="sprints current-sprint">
+        <div className="section-header">
+          <h2 id="sprints-heading">Current sprint</h2>
+          {!creating && <button type="button" ref={focusTarget('new')} onClick={() => setCreating(true)}>New sprint</button>}
+        </div>
+        {announcement && <p ref={announcementRef} tabIndex={-1} role="status" className="announcement">{announcement}</p>}
+        {creating && <SprintForm initial={defaultInput(sprints)} onSubmit={handleCreate} onCancel={closeCreate} />}
+        {active.length > 0 ? <ul className="sprint-list">{active.map(renderSprint)}</ul> : (
+          <p className="empty-state">{sprints.length === 0 ? 'No sprints yet. Create one to plan a week of work.' : 'No active sprint. Start an upcoming sprint below, or create one.'}</p>
+        )}
+      </section>
+      {children}
+      {planned.length > 0 && (
+        <section aria-labelledby="upcoming-heading" className="sprints sprint-planning">
+          <h2 id="upcoming-heading">Upcoming sprints</h2>
+          <ul className="sprint-list">{planned.map(renderSprint)}</ul>
+        </section>
       )}
-
-      {creating && (
-        <SprintForm initial={defaultInput(sprints)} onSubmit={handleCreate} onCancel={closeCreate} />
+      {completed.length > 0 && (
+        <details className="sprint-history" open={historyOpen} onToggle={(event) => setHistoryOpen(event.currentTarget.open)}>
+          <summary>Completed sprints ({completed.length})</summary>
+          <p className="field-hint">Review what you delivered and reflect on how to improve the next sprint.</p>
+          <ul className="sprint-list">{completed.map(renderSprint)}</ul>
+        </details>
       )}
-
-      {sprints.length === 0 ? (
-        !creating && <p className="empty-state">No sprints yet. Create one to plan a week of work.</p>
-      ) : (
-        <ul className="sprint-list">
-          {sprints.map((sprint) => {
-            const items = itemsIn(sprint.id)
-            const unfinished = unfinishedItems(sprint, data.workItems)
-            const open = panel?.sprintId === sprint.id ? panel.kind : null
-            return (
-              <li key={sprint.id} className={`sprint-row sprint-${sprint.state}`}>
-                <div className="sprint-summary">
-                  <div>
-                    <h3>
-                      {sprint.name}{' '}
-                      <span className={`state state-${sprint.state}`}>{SPRINT_STATE_LABELS[sprint.state]}</span>
-                    </h3>
-                    <p className="item-meta">
-                      {formatDateRange(sprint.startDate, sprint.endDate)} ·{' '}
-                      {sprint.state === 'completed'
-                        ? `${plural(items.length, 'item', 'items')} done`
-                        : plural(items.length, 'item', 'items')}
-                    </p>
-                    <p>
-                      <strong>Goal:</strong> {sprint.goal}
-                    </p>
-                    {startError?.sprintId === sprint.id && (
-                      <p role="alert" className="field-error">
-                        {startError.reason}
-                      </p>
-                    )}
-                  </div>
-                  {open === null && (
-                    <div className="actions">
-                      {sprint.state === 'planned' && (
-                        <button type="button" aria-label={`Start ${sprint.name}`} onClick={() => handleStart(sprint)}>
-                          Start sprint
-                        </button>
-                      )}
-                      {sprint.state === 'active' && (
-                        <button
-                          type="button"
-                          ref={focusTarget(`complete-${sprint.id}`)}
-                          aria-label={`Complete ${sprint.name}`}
-                          onClick={() => {
-                            setAnnouncement(null)
-                            setPanel({ sprintId: sprint.id, kind: 'complete' })
-                          }}
-                        >
-                          Complete sprint
-                        </button>
-                      )}
-                      {sprint.state !== 'planned' && (
-                        <button
-                          type="button"
-                          ref={focusTarget(`notes-${sprint.id}`)}
-                          // Accessible name starts with the visible text so voice control can target it.
-                          aria-label={`${hasNotes(sprint) ? 'Edit' : 'Add'} review and retro for ${sprint.name}`}
-                          onClick={() => {
-                            setAnnouncement(null)
-                            setPanel({ sprintId: sprint.id, kind: 'notes' })
-                          }}
-                        >
-                          {hasNotes(sprint) ? 'Edit review and retro' : 'Add review and retro'}
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {open === 'complete' && (
-                  <CompleteSprintPanel
-                    sprint={sprint}
-                    doneCount={items.length - unfinished.length}
-                    unfinishedCount={unfinished.length}
-                    nextPlanned={nextPlannedSprint(sprint, data.sprints)}
-                    onConfirm={(carry) => handleComplete(sprint, carry)}
-                    onCancel={closePanel}
-                  />
-                )}
-                {open === 'notes' && (
-                  <SprintNotesForm
-                    sprint={sprint}
-                    onSave={(notes) => handleSaveNotes(sprint, notes)}
-                    onCancel={closePanel}
-                  />
-                )}
-
-                {open !== 'notes' && hasNotes(sprint) && (
-                  <dl className="sprint-notes">
-                    {sprint.review && (
-                      <>
-                        <dt>Review</dt>
-                        <dd>{sprint.review}</dd>
-                      </>
-                    )}
-                    {sprint.retro.wentWell && (
-                      <>
-                        <dt>Went well</dt>
-                        <dd>{sprint.retro.wentWell}</dd>
-                      </>
-                    )}
-                    {sprint.retro.toImprove && (
-                      <>
-                        <dt>To improve</dt>
-                        <dd>{sprint.retro.toImprove}</dd>
-                      </>
-                    )}
-                    {sprint.retro.actions && (
-                      <>
-                        <dt>Actions</dt>
-                        <dd>{sprint.retro.actions}</dd>
-                      </>
-                    )}
-                  </dl>
-                )}
-              </li>
-            )
-          })}
-        </ul>
-      )}
-    </section>
+    </>
   )
 }

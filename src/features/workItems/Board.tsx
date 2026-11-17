@@ -39,12 +39,20 @@ export function Board({
   editButtonRef,
 }: BoardProps) {
   return (
-    <div className="board">
+    <>
+    <nav aria-label="Board columns" className="board-jump-links">
+      {STATUSES.map((status) => (
+        <a key={status} data-empty={items.every((item) => item.status !== status)} href={`#column-${status}`}>
+          {STATUS_LABELS[status]} <span>({items.filter((item) => item.status === status).length})</span>
+        </a>
+      ))}
+    </nav>
+    <div className="board" data-has-items={items.length > 0}>
       {STATUSES.map((status) => {
         const columnItems = items.filter((item) => item.status === status)
         const headingId = `column-${status}`
         return (
-          <section key={status} className="board-column" aria-labelledby={headingId}>
+          <section key={status} className={`board-column${columnItems.length === 0 ? ' board-column-empty' : ''}`} aria-labelledby={headingId}>
             <h3 id={headingId}>
               {STATUS_LABELS[status]} <span className="column-count">({columnItems.length})</span>
             </h3>
@@ -65,9 +73,7 @@ export function Board({
                         {PRIORITY_LABELS[item.priority]} priority · {criteriaLabel(item.acceptanceCriteria.length)}
                       </p>
                       <div className="card-actions">
-                        <label className="visually-hidden" htmlFor={selectId}>
-                          Status of {item.title}
-                        </label>
+                        <label className="card-control-label" htmlFor={selectId}>Status{' '}<span className="visually-hidden">of {item.title}</span></label>
                         <select
                           id={selectId}
                           value={item.status}
@@ -85,8 +91,23 @@ export function Board({
                             </option>
                           ))}
                         </select>
-                        <label className="visually-hidden" htmlFor={sprintSelectId}>
-                          Sprint for {item.title}
+                        {canEdit && (
+                          <button
+                            type="button"
+                            ref={editButtonRef?.(item.id)}
+                            aria-label={`Edit ${item.title}`}
+                            onClick={() => onEdit(item)}
+                          >
+                            Edit
+                          </button>
+                        )}
+                      </div>
+                      <p className="card-sprint">{current ? `Sprint: ${current.name}` : 'No sprint assigned'}</p>
+                      <details className="item-details">
+                        <summary>Details and sprint</summary>
+                        <div className="card-assignment">
+                        <label className="card-control-label" htmlFor={sprintSelectId}>
+                          Sprint{' '}<span className="visually-hidden">for {item.title}</span>
                         </label>
                         <select
                           id={sprintSelectId}
@@ -105,17 +126,14 @@ export function Board({
                             </option>
                           ))}
                         </select>
-                        {canEdit && (
-                          <button
-                            type="button"
-                            ref={editButtonRef?.(item.id)}
-                            aria-label={`Edit ${item.title}`}
-                            onClick={() => onEdit(item)}
-                          >
-                            Edit
-                          </button>
-                        )}
-                      </div>
+                        </div>
+                        {item.description && <p className="item-description">{item.description}</p>}
+                        {item.acceptanceCriteria.length > 0 ? (
+                          <ul className="item-criteria">
+                            {item.acceptanceCriteria.map((criterion, index) => <li key={index}>{criterion}</li>)}
+                          </ul>
+                        ) : <p className="field-hint">No acceptance criteria yet.</p>}
+                      </details>
                     </li>
                   )
                 })}
@@ -125,5 +143,6 @@ export function Board({
         )
       })}
     </div>
+    </>
   )
 }

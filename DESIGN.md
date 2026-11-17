@@ -1,6 +1,6 @@
 # Design system: SprintLab
 
-Status: incumbent implementation documented from `src/index.css` on 2026-11-17. This records the built baseline; no redesign or reference brand has been selected. Product constraints live in [PRODUCT.md](PRODUCT.md).
+Status: incumbent implementation documented from `src/index.css` on 2026-11-17. The #49 refinements preserve the incumbent identity while adding an active-work hierarchy and appearance preferences. No redesign or reference brand has been selected. Product constraints live in [PRODUCT.md](PRODUCT.md).
 
 ## Overview
 
@@ -8,18 +8,21 @@ A task-focused browser interface with a centered application shell, project list
 
 ## Colors
 
-| Role | Existing CSS value |
-|---|---|
-| Main text / background | `#1f2328` / `#ffffff` |
-| Muted text | `#59636e` |
-| Borders / input borders | `#d0d7de` / `#8c959f` |
-| Link and focus | `#0969da` |
-| Column surface | `#f6f8fa` |
-| Error | `#cf222e` |
-| Success / active sprint | `#1a7f37` |
-| Completed sprint | `#6639ba` |
+Semantic custom properties use CSS `light-dark()` with `color-scheme`. Explicit light/dark choices set the scheme; System leaves both schemes available so OS/browser changes apply automatically. Native form controls follow the same scheme.
 
-State badges also carry text; color is not their only meaning. These are observed values, not a new contrast certification.
+| Role | Light | Dark |
+|---|---|---|
+| Text / surface | `#1f2328` / `#ffffff` | `#e6edf3` / `#111820` |
+| Muted text | `#59636e` | `#aebdcd` |
+| Border / control border | `#d0d7de` / `#8c959f` | `#3b4959` / `#7a8b9f` |
+| Link, focus, primary surface | `#0969da` | `#8fc5ff` |
+| Primary text | `#ffffff` | `#111820` |
+| Column surface | `#f6f8fa` | `#1a2430` |
+| Error text / surface | `#b42330` / `#fff5f5` | `#ffaba8` / `#351b23` |
+| Active / success | `#1a7f37` | `#8cdba1` |
+| Completed | `#6639ba` | `#c8aeff` |
+
+State badges keep textual meaning. Destructive buttons use white on `#b42330` in both appearances. Focus, selection, caret, and scrollbars use the semantic palette. This is an implementation record, not a full accessibility certification.
 
 ## Typography
 
@@ -27,7 +30,11 @@ System UI stack: `system-ui`, `-apple-system`, `Segoe UI`, `Roboto`, sans-serif.
 
 ## Layout and components
 
-The `.app` shell has a 64rem maximum width and 2rem/1rem vertical/horizontal padding. Lists use separators; cards and panels use 4px or 6px corners with thin borders. The board uses five equal columns and switches to one column at 900px. Sprint summaries stack below 600px. Action groups wrap. Keyboard focus uses a 2px outline with 2px offset.
+The `.app` shell has an 80rem maximum width, with 2rem/1.5rem vertical/horizontal padding and 1rem phone padding. Semantic spacing tokens use quarter-rem increments. Lists use separators; cards and panels retain 4px/6px corners and thin borders.
+
+The active goal leads, then the board, upcoming sprints, completed-history disclosure, and quieter project management. Board columns change from five to two at 1200px and one at 700px. At phone widths, empty columns are omitted when work exists; populated-column jump links aid navigation. Empty boards retain the Backlog prompt. All statuses remain available through native item controls.
+
+Buttons, selects, text inputs, and summaries have at least 44px height. Primary actions use the accent fill, secondary controls use bordered surfaces, and destructive confirmation stays explicit. Status is always visible; assignment, description, and criteria use a native details disclosure. Keyboard focus uses a 2px outline with 2px offset. Do not visually reorder DOM controls or hide the focus-return target.
 
 Preserve native labelled controls, confirmation panels, save/recovery errors, and focus behavior. Read the current CSS and components before modifying them; this file is a summary of their baseline.
 
