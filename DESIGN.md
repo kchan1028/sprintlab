@@ -27,11 +27,11 @@ State badges keep textual meaning. Destructive buttons use white on `#b42330` in
 
 ## Typography
 
-System UI stack: `system-ui`, `-apple-system`, `Segoe UI`, `Roboto`, sans-serif. Base line height is 1.5. Item metadata uses 0.875rem; card titles use 0.9375rem; project titles use 1rem. Forms inherit the surrounding font.
+System UI stack: `system-ui`, `-apple-system`, `Segoe UI`, `Roboto`, sans-serif. Base line height is 1.5. Item metadata uses 0.875rem; card titles use 1rem; project-row titles use 1.125rem; project-page titles use 1.75rem. Forms inherit the surrounding font.
 
 ## Layout and components
 
-The `.app` shell has an 80rem maximum width, with 2rem/1.5rem vertical/horizontal padding and 1rem phone padding. Semantic spacing tokens use quarter-rem increments. Lists use separators; cards and panels retain 4px/6px corners and thin borders.
+The `.app` shell has an 80rem maximum width, with 2rem/1.5rem vertical/horizontal padding and 1rem phone padding. Semantic spacing tokens use quarter-rem increments. Lists use separators. Project-list, current-sprint, and board-column surfaces use 12px corners; work cards use 8px; existing forms and confirmation panels retain 6px corners. Native fields use 4px/6px corners and thin borders.
 
 The active goal leads, then the board, upcoming sprints, completed-history disclosure, and quieter project management. The current sprint uses a bordered surface with its goal/actions on the left and a compact work-progress summary on the right; it stacks at phone width. Project rows keep their own completion summary inside the existing content region. Board columns change from five to two at 1200px and one at 700px. At phone widths, empty columns are omitted when work exists; populated-column jump links aid navigation. Empty boards retain the Backlog prompt. All statuses remain available through native item controls.
 
