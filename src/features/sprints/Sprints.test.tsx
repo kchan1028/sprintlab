@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { createProject } from '../../domain/project'
@@ -104,6 +104,8 @@ describe('Sprints', () => {
     expect(within(sprintsRegion()).getByRole('heading', { name: 'Sprint 1 Active' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Start Sprint 1' })).not.toBeInTheDocument()
     expect(storedSprints()[0].state).toBe('active')
+    const announcement = screen.getByText('Sprint 1 started.')
+    await waitFor(() => expect(announcement).toHaveFocus())
   })
 
   it('blocks starting a second sprint while one is active, with a clear message', async () => {
