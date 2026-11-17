@@ -66,7 +66,7 @@ Use Pass, Fail, Blocked, or Not Run. Only actual Pass evidence supports a verifi
 
 ## Workspace regression coverage
 
-Issue #49 covers the active-sprint default, explicit all-items reload, newly created unassigned work remaining visible, collapsed history, completion focus, and details/assignment access. Appearance tests cover invalid or blocked storage, persistence, separate project data, and availability on recovery screens. Browser tests cover System following a dark OS preference, explicit overrides, 320/390/768/1280px layouts, long text, 44px control heights, and axe checks on light/dark forms and destructive confirmations. These are local Chromium checks, not real-device, screen-reader, or cross-browser verification.
+Issue #49 covers the active-sprint default, explicit all-items reload, newly created unassigned work remaining visible, collapsed history, completion focus, and details/assignment access. Issue #51 also asserts that starting a sprint moves focus to a stable confirmation, including when All items is explicitly selected. Appearance tests cover invalid or blocked storage, persistence, separate project data, and availability on recovery screens. Browser tests cover System following a dark OS preference, explicit overrides, 320/390/768/1280px layouts, long text, 44px control heights, and axe checks on light/dark forms and destructive confirmations. These are local Chromium checks, not real-device, screen-reader, or cross-browser verification.
 
 ## Progress summary coverage
 

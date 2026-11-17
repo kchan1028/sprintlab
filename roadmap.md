@@ -48,4 +48,4 @@ P0 blocks an explicitly approved release gate. P1 is expected work that may slip
 
 ## Next actions
 
-The source follow-up in #51 remains unpublished and requires its own code review before merge. Employer-facing presentation evidence and remaining review requirements are recorded in the #52 pull request. The owner decides merging, release scope, and repository settings; this work does not authorize deployment, live model calls, or settings changes.
+The source follow-up in #51 is published on the remaining-work branch and requires its own code review before merge. Employer-facing presentation evidence and remaining review requirements are recorded in the #52 pull request. The owner decides merging, release scope, and repository settings; this work does not authorize deployment, live model calls, or settings changes.

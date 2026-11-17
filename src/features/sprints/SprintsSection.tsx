@@ -83,6 +83,7 @@ export function SprintsSection({ project, children }: { project: Project; childr
     }
     setStartError(null)
     dispatch({ type: 'sprint/updated', sprint: startSprint(sprint) })
+    announce(`${sprint.name} started.`)
   }
 
   function handleComplete(sprint: Sprint, carryOver: CarryOver) {

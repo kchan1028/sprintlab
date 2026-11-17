@@ -16,7 +16,9 @@ Close a finding only with independently reviewed evidence tied to a commit and s
 
 ## Observed defects
 
-No runtime defects assessed in this documentation change.
+| ID | Finding | Severity | Launch impact | Owner | Status | Closure evidence |
+|---|---|---|---|---|---|---|
+| AUD-001 | Starting a planned sprint removes the focused Start button as its row moves above the board | Medium | Keyboard usability follow-up | Change author | Fixed (pending verification) | #51 fix and component/Chromium regressions; independent review required before closure |
 
 ## Documented readiness gaps
 
