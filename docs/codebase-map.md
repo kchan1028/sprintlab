@@ -19,6 +19,7 @@ Paths inspected 2026-11-17 against the current source. This is navigation; read 
 | Drafter | `src/features/drafts/`, `functions/api/draft-stories.ts`, `server/draftStories.ts` | `src/domain/drafts.ts` | Client, UI, domain, and server tests |
 | Appearance | `src/components/AppearanceSelect.tsx`, `src/repository/appearance.ts` | Separate preference key; `src/main.tsx` applies it before mount | Appearance component tests and `e2e/workspace.e2e.ts` |
 | Accessibility and errors | `src/components/`, `src/test/axe.ts` | Shared focus and title helpers in `src/lib/` | Accessibility and error-state tests |
+| Progress presentation | `src/components/WorkProgress.tsx` | Caller supplies correctly scoped project or active-sprint items; native progress plus textual counts | `src/features/Progress.test.tsx`, `e2e/workspace.e2e.ts` |
 | Styling | `src/index.css` | [Design baseline](../DESIGN.md) | Existing browser screenshots; no visual regression claim |
 | Documentation CI | `scripts/check-doc-links.mjs` | [Documentation guide](documentation-guide.md) | `npm run check:docs` |
 

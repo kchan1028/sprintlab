@@ -41,9 +41,10 @@ Choose **System**, **Light**, or **Dark** in the header. Project data stays in t
 **React + TypeScript + Vite**, with React Router for navigation. Components dispatch actions; pure domain functions own validation and transitions; repository modules own browser storage. The optional drafter uses a serverless function, with its key kept out of browser code.
 
 - **Predictable transitions:** one active sprint per project, valid cross-record assignment, and atomic sprint completion.
+- **Visible work progress:** project-wide and active-sprint completion use real Done/total counts, with explicit scope and empty states.
 - **Explicit view state:** URL filters override the active-sprint default, including an explicit All items choice that survives reloads.
 - **Small persistence boundary:** schema and per-record validation, recovery paths, and a separate appearance preference that never changes project backups.
-- **Checks at different layers:** 256 unit/component tests, Chromium workflow tests, browser axe checks, and CI. Tests have been deliberately broken to confirm that important regressions are caught.
+- **Checks at different layers:** 262 unit/component tests, Chromium workflow tests, browser axe checks, and CI. Tests have been deliberately broken to confirm that important regressions are caught.
 
 Read the [architecture](docs/architecture.md), [accepted decisions](docs/decisions/README.md), and [test plan](docs/testing/test-plan.md) for implementation details and verification limits.
 

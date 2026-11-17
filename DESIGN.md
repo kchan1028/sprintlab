@@ -12,6 +12,7 @@ Semantic custom properties use CSS `light-dark()` with `color-scheme`. Explicit 
 
 | Role | Light | Dark |
 |---|---|---|
+| Canvas | `#f5f7fa` | `#0b1017` |
 | Text / surface | `#1f2328` / `#ffffff` | `#e6edf3` / `#111820` |
 | Muted text | `#59636e` | `#aebdcd` |
 | Border / control border | `#d0d7de` / `#8c959f` | `#3b4959` / `#7a8b9f` |
@@ -32,9 +33,13 @@ System UI stack: `system-ui`, `-apple-system`, `Segoe UI`, `Roboto`, sans-serif.
 
 The `.app` shell has an 80rem maximum width, with 2rem/1.5rem vertical/horizontal padding and 1rem phone padding. Semantic spacing tokens use quarter-rem increments. Lists use separators; cards and panels retain 4px/6px corners and thin borders.
 
-The active goal leads, then the board, upcoming sprints, completed-history disclosure, and quieter project management. Board columns change from five to two at 1200px and one at 700px. At phone widths, empty columns are omitted when work exists; populated-column jump links aid navigation. Empty boards retain the Backlog prompt. All statuses remain available through native item controls.
+The active goal leads, then the board, upcoming sprints, completed-history disclosure, and quieter project management. The current sprint uses a bordered surface with its goal/actions on the left and a compact work-progress summary on the right; it stacks at phone width. Project rows keep their own completion summary inside the existing content region. Board columns change from five to two at 1200px and one at 700px. At phone widths, empty columns are omitted when work exists; populated-column jump links aid navigation. Empty boards retain the Backlog prompt. All statuses remain available through native item controls.
 
 Buttons, selects, text inputs, and summaries have at least 44px height. Primary actions use the accent fill, secondary controls use bordered surfaces, and destructive confirmation stays explicit. Status is always visible; assignment, description, and criteria use a native details disclosure. Keyboard focus uses a 2px outline with 2px offset. Do not visually reorder DOM controls or hide the focus-return target.
+
+`WorkProgress` uses a labelled native progress element for Done/current-membership counts. Project summaries include all work in that project; active-sprint summaries include only currently assigned work and are independent of the board filter. Text counts and a status breakdown carry meaning alongside the bar. Empty work shows text without a ratio; phone status breakdowns omit zero-count entries. These are item counts, not effort, velocity, capacity, forecasts, or historical commitment measures.
+
+Board titles lead their cards. Type and priority share a compact top line; acceptance-criteria count remains separate and never contributes to completion. In Progress uses the existing accent, Done uses the existing success role, and every status/priority keeps its text label. Empty desktop columns use a dashed boundary. The shell uses a neutral canvas and a small board mark; the system font and existing blue/neutral identity remain unchanged.
 
 Preserve native labelled controls, confirmation panels, save/recovery errors, and focus behavior. Read the current CSS and components before modifying them; this file is a summary of their baseline.
 

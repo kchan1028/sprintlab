@@ -52,9 +52,9 @@ export function Board({
         const columnItems = items.filter((item) => item.status === status)
         const headingId = `column-${status}`
         return (
-          <section key={status} className={`board-column${columnItems.length === 0 ? ' board-column-empty' : ''}`} aria-labelledby={headingId}>
+          <section key={status} className={`board-column${columnItems.length === 0 ? ' board-column-empty' : ''}`} data-status={status} aria-labelledby={headingId}>
             <h3 id={headingId}>
-              {STATUS_LABELS[status]} <span className="column-count">({columnItems.length})</span>
+              <span className="column-label"><span className="status-dot" aria-hidden="true" />{STATUS_LABELS[status]}</span>{' '}<span className="column-count">({columnItems.length})</span>
             </h3>
             {columnItems.length === 0 ? (
               <p className="empty-state">No items</p>
@@ -67,10 +67,13 @@ export function Board({
                   const showCurrentCompleted = current?.state === 'completed'
                   return (
                     <li key={item.id} className="card">
-                      <span className={`badge badge-${item.type}`}>{TYPE_LABELS[item.type]}</span>
+                      <div className="card-topline">
+                        <span className={`badge badge-${item.type}`}>{TYPE_LABELS[item.type]}</span>
+                        <span className={`priority priority-${item.priority}`}>{PRIORITY_LABELS[item.priority]} priority</span>
+                      </div>
                       <h4>{item.title}</h4>
                       <p className="item-meta">
-                        {PRIORITY_LABELS[item.priority]} priority · {criteriaLabel(item.acceptanceCriteria.length)}
+                        {criteriaLabel(item.acceptanceCriteria.length)}
                       </p>
                       <div className="card-actions">
                         <label className="card-control-label" htmlFor={selectId}>Status{' '}<span className="visually-hidden">of {item.title}</span></label>

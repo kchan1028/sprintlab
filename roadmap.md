@@ -14,6 +14,7 @@ This is the only current roadmap. Requirements live in [PRODUCT.md](PRODUCT.md);
 | Documentation ownership and link CI | Implemented | [Merged PR #48](https://github.com/kchan1028/sprintlab/pull/48); no independent verification inferred from merge alone |
 | Focused workspace and light/dark/system appearance | Implemented | [Merged PR #50](https://github.com/kchan1028/sprintlab/pull/50), commit `64cc2b7`; author checks and CI are recorded separately from independent review; the unpublished focus follow-up remains in [#51](https://github.com/kchan1028/sprintlab/issues/51) |
 | Employer-facing README and case study | Implemented | [Issue #52](https://github.com/kchan1028/sprintlab/issues/52); employer-focused overview, decision evidence, and reproducible previews; review/check evidence is retained in the associated PR |
+| Visual project/sprint progress and app hierarchy | Implemented in #54; publication pending | [Issue #54](https://github.com/kchan1028/sprintlab/issues/54); real item counts, clearer card hierarchy, light/dark and phone coverage; code review required before merge |
 | Screen-reader and cross-browser validation | Planned | [Accessibility gaps](ACCESSIBILITY.md#known-limitations); no verification claim inferred from the interface pass |
 
 A released feature is not automatically Verified across every environment. Historical local results remain evidence for their tested commits; this scaffold does not rerun or upgrade them.

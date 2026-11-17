@@ -6,6 +6,7 @@ Summary of [PRODUCT.md](PRODUCT.md) and [roadmap.md](roadmap.md#delivery-status)
 |---|---|---|---|
 | Projects and work items | Manage personal projects, stories, bugs and acceptance criteria | Implemented | [Core flow 1](PRODUCT.md#core-flows-and-acceptance-criteria) |
 | Board | Five statuses with labelled controls; active-sprint default and disclosed details in #49 | Implemented ([PR #50](https://github.com/kchan1028/sprintlab/pull/50)) | [Core flow 1](PRODUCT.md#core-flows-and-acceptance-criteria) |
+| Progress summaries | Project completion, active-sprint Done/total, and labelled status counts using current items | Implemented in #54; review required before merge | [Capabilities](PRODUCT.md#capabilities-and-constraints) |
 | Sprints | Goal, dates, planning, assignment, completion, review and retro | Implemented | [Core flows 2–3](PRODUCT.md#core-flows-and-acceptance-criteria) |
 | Your data | JSON export, validated previewed replacement import, demo data | Implemented | [Core flow 4](PRODUCT.md#core-flows-and-acceptance-criteria) |
 | Recovery | Failed-save retry/download and corrupt-data recovery | Implemented | [Core flow 4](PRODUCT.md#core-flows-and-acceptance-criteria) |

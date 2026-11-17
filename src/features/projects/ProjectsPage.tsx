@@ -5,6 +5,7 @@ import { useDocumentTitle } from '../../lib/useDocumentTitle'
 import { useFocusReturn } from '../../lib/useFocusReturn'
 import { useAppData } from '../../state/useAppData'
 import { useAddDemo } from '../data/useAddDemo'
+import { WorkProgress } from '../../components/WorkProgress'
 import { ProjectForm } from './ProjectForm'
 
 type Editing = { mode: 'none' } | { mode: 'create' } | { mode: 'edit'; projectId: string }
@@ -43,7 +44,7 @@ export function ProjectsPage() {
   }
 
   return (
-    <section aria-labelledby="projects-heading">
+    <section aria-labelledby="projects-heading" className="projects-page">
       <div className="section-header">
         <h2 id="projects-heading">Projects</h2>
         {editing.mode === 'none' && (
@@ -52,6 +53,8 @@ export function ProjectsPage() {
           </button>
         )}
       </div>
+
+      {data.projects.length > 0 && <p className="page-intro">Choose a project to pick up where you left off.</p>}
 
       {announcement && (
         <p
@@ -75,7 +78,7 @@ export function ProjectsPage() {
 
       {data.projects.length === 0 ? (
         editing.mode !== 'create' && (
-          <div className="empty-state">
+          <div className="empty-state projects-empty">
             <p>No projects yet.</p>
             <p>
               Create one, or{' '}
@@ -88,8 +91,10 @@ export function ProjectsPage() {
         )
       ) : (
         <ul className="project-list">
-          {data.projects.map((project) =>
-            editing.mode === 'edit' && editing.projectId === project.id ? (
+          {data.projects.map((project) => {
+            const items = data.workItems.filter((item) => item.projectId === project.id)
+            const active = data.sprints.find((sprint) => sprint.projectId === project.id && sprint.state === 'active')
+            return editing.mode === 'edit' && editing.projectId === project.id ? (
               <li key={project.id}>
                 <ProjectForm
                   title={`Edit ${project.name}`}
@@ -101,11 +106,15 @@ export function ProjectsPage() {
               </li>
             ) : (
               <li key={project.id} className="project-row">
-                <div>
+                <div className="project-overview">
                   <h3>
                     <Link to={`/projects/${project.id}`}>{project.name}</Link>
                   </h3>
-                  {project.description && <p>{project.description}</p>}
+                  <p className="project-context">
+                    {active ? <><span className="state state-active">Active sprint</span> {active.name}</> : 'No active sprint'}
+                  </p>
+                  {project.description && <p className="project-description">{project.description}</p>}
+                  <WorkProgress items={items} label="Project work" context={project.name} compact />
                 </div>
                 {editing.mode === 'none' && (
                   <button
@@ -118,8 +127,8 @@ export function ProjectsPage() {
                   </button>
                 )}
               </li>
-            ),
-          )}
+            )
+          })}
         </ul>
       )}
     </section>
