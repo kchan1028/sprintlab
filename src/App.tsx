@@ -35,7 +35,13 @@ function App() {
     <main className="app">
       <header className="app-header">
         <div>
-          <h1>SprintLab</h1>
+          <h1>
+            <svg className="app-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+              <rect x="2" y="5" width="28" height="22" rx="5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M8 11v10M13.3 11v6M18.7 11v10M24 11v6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+            </svg>
+            SprintLab
+          </h1>
           <p>A small project and bug tracker for a solo developer.</p>
         </div>
         <div className="header-controls">

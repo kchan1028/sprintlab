@@ -4,7 +4,7 @@ A product and frontend engineering case study of a browser-local sprint tracker 
 
 [Try the demo](https://kchan1028.github.io/sprintlab/) · [View the source](../src/) · [Read the architecture](architecture.md)
 
-**Scope:** product direction, interaction decisions, frontend state, accessibility, persistence, and verification. **Evidence baseline:** repository records through merged [PR #50](https://github.com/kchan1028/sprintlab/pull/50), November 17, 2026. This is an AI-assisted project; [ownership and limits](#ownership-and-evidence-limits) are explicit.
+**Scope:** product direction, interaction decisions, frontend state, accessibility, persistence, and verification. **Evidence baseline:** repository records dated November 17, 2026; the original workspace/appearance pass is documented in [PR #50](https://github.com/kchan1028/sprintlab/pull/50), and the current progress presentation in [issue #54](https://github.com/kchan1028/sprintlab/issues/54). This is an AI-assisted project; [ownership and limits](#ownership-and-evidence-limits) are explicit.
 
 ![The active sprint goal and its work form one reading path](screenshots/workspace-preview.png)
 
@@ -46,6 +46,8 @@ The revised reading order is **active sprint goal → current work → upcoming 
 The implementation lives in [ProjectPage](../src/features/projects/ProjectPage.tsx), [SprintsSection](../src/features/sprints/SprintsSection.tsx), and [WorkItemsSection](../src/features/workItems/WorkItemsSection.tsx). The [earlier screenshot](https://github.com/kchan1028/sprintlab/blob/87e07533ca60467745dbc39813743bf3e133efa4/docs/screenshots/project-board.png) preserves the original layout.
 
 **Tradeoff:** active-first is useful for daily work, but it must not hide an intentional view or newly created items. An explicit `?sprint=all` survives reloads. New items remain unassigned; creation reveals the no-sprint view when the active filter would otherwise hide them.
+
+The current presentation also distinguishes project-wide Done/total counts from the active sprint’s current assignment. Its bar and status counts update from stored item status; they do not estimate effort, velocity, or original sprint commitment. Empty work is stated directly rather than displayed as a misleading percentage.
 
 This iteration followed a design critique and an owner decision. It has local regression coverage; it has not been validated through a user study or measured task-time improvement.
 

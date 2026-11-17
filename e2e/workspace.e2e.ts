@@ -91,3 +91,23 @@ test('light and dark forms pass browser accessibility checks and contain long co
     await page.getByRole('button', { name: 'Cancel', exact: true }).click()
   }
 })
+
+
+test('project and sprint progress update from real status changes and retain their scope', async ({ page }) => {
+  await openDemo(page)
+  const progress = page.getByRole('progressbar', { name: 'Sprint work for Sprint 3' })
+  await expect(progress).toHaveAttribute('value', '1')
+  await expect(progress).toHaveAttribute('max', '3')
+  await page.getByLabel('Status of Data safety: delete, export and import').selectOption('done')
+  await expect(progress).toHaveAttribute('value', '2')
+  await expect(progress).toHaveAttribute('aria-valuetext', '2 of 3 items done')
+  await page.getByLabel('Show').selectOption('none')
+  await expect(progress).toHaveAttribute('value', '2')
+  await expect(progress).toHaveAttribute('max', '3')
+  await page.getByRole('link', { name: 'Projects', exact: true }).click()
+  const project = page.getByRole('progressbar', { name: 'Project work for SprintLab (demo)' })
+  await expect(project).toHaveAttribute('value', '8')
+  await expect(project).toHaveAttribute('max', '12')
+  await page.reload()
+  await expect(project).toHaveAttribute('aria-valuetext', '8 of 12 items done')
+})

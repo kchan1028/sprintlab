@@ -68,6 +68,10 @@ Use Pass, Fail, Blocked, or Not Run. Only actual Pass evidence supports a verifi
 
 Issue #49 covers the active-sprint default, explicit all-items reload, newly created unassigned work remaining visible, collapsed history, completion focus, and details/assignment access. Appearance tests cover invalid or blocked storage, persistence, separate project data, and availability on recovery screens. Browser tests cover System following a dark OS preference, explicit overrides, 320/390/768/1280px layouts, long text, 44px control heights, and axe checks on light/dark forms and destructive confirmations. These are local Chromium checks, not real-device, screen-reader, or cross-browser verification.
 
+## Progress summary coverage
+
+`src/features/Progress.test.tsx` checks project/sprint scope, exclusion of unrelated or historical work from active progress, status updates and reloads, board-filter independence, and honest empty states. `e2e/workspace.e2e.ts` verifies a real status change updates both the active-sprint and project summary while preserving their separate denominators. Counts use item status, never acceptance-criteria count or estimated effort. The shared screenshot workflow captures the current light/dark and desktop/phone presentation; its compact capture viewport accommodates the full summary and board.
+
 ## 8. Keeping this plan current
 
 Review this plan on every change. Update when workflows, failure handling, commands, CI, fixtures, coverage, or responsibilities change. Every PR includes **Test plan updated:** what and why, or **No test plan update needed:** why. Results belong in the PR or linked report.

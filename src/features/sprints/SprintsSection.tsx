@@ -20,6 +20,7 @@ import {
 import type { Project, Sprint } from '../../domain/types'
 import { useFocusReturn } from '../../lib/useFocusReturn'
 import { useAppData } from '../../state/useAppData'
+import { WorkProgress } from '../../components/WorkProgress'
 import { CompleteSprintPanel } from './CompleteSprintPanel'
 import { SprintForm } from './SprintForm'
 import { SprintNotesForm } from './SprintNotesForm'
@@ -129,7 +130,7 @@ export function SprintsSection({ project, children }: { project: Project; childr
                 ? `${plural(items.length, 'item', 'items')} done`
                 : plural(items.length, 'item', 'items')}
             </p>
-            <p>
+            <p className="sprint-goal">
               <strong>Goal:</strong> {sprint.goal}
             </p>
             {startError?.sprintId === sprint.id && (
@@ -177,6 +178,7 @@ export function SprintsSection({ project, children }: { project: Project; childr
           )}
         </div>
 
+        {sprint.state === 'active' && <WorkProgress items={items} label="Sprint work" context={sprint.name} />}
         {sprint.state === 'planned' && !startCheck.ok && <p id={`start-help-${sprint.id}`} className="field-hint">{startCheck.reason}</p>}
         {open === 'complete' && (
           <CompleteSprintPanel

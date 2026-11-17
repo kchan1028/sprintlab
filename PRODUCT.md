@@ -26,7 +26,8 @@ The repository documents SprintLab's use in planning its own development. Local 
 
 ## Capabilities and Constraints
 
-- Projects contain stories and bugs with titles, descriptions, priorities, and acceptance criteria.
+- Projects contain stories and bugs with titles, descriptions, priorities, and acceptance criteria. Project rows show active-sprint context and Done/total counts across that project.
+- The active sprint shows Done/total counts and a labelled status breakdown for its currently assigned items. These counts stay independent of the board filter, update with status changes, and measure items rather than effort or velocity. Empty work has a textual state with no undefined ratio.
 - The board has five statuses: Backlog, Ready, In Progress, Review, and Done. Labelled controls change status without requiring drag-and-drop.
 - Sprints have a required goal and dates. Only one sprint per project can be active. The active goal and board lead the project page; upcoming sprints and collapsible completed history follow. Completion opens history and announces the result without losing keyboard focus.
 - With no explicit URL filter, the board shows the active sprint when one exists, otherwise all items. Explicit `?sprint=all`, `none`, and valid sprint IDs remain authoritative; unknown IDs show all. New items stay unassigned and are revealed in the no-sprint view if the current filter would hide them.

@@ -54,7 +54,8 @@ describe('Work items', () => {
 
     const backlog = screen.getByRole('region', { name: /Backlog/ })
     expect(within(backlog).getByRole('heading', { name: 'Crash on empty name' })).toBeInTheDocument()
-    expect(within(backlog).getByText('High priority · 2 acceptance criteria')).toBeInTheDocument()
+    expect(within(backlog).getByText('High priority')).toBeInTheDocument()
+    expect(within(backlog).getByText('2 acceptance criteria')).toBeInTheDocument()
     expect(storedItems()).toMatchObject([
       {
         projectId: 'p1',

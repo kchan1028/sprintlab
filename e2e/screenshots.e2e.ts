@@ -16,7 +16,7 @@ test('README screenshots', async ({ page }) => {
   await page.getByRole('link', { name: 'SprintLab (demo)' }).click()
   await expect(page.getByRole('region', { name: 'Board' })).toBeVisible()
   async function captureWorkspace(name: string) {
-    await page.setViewportSize({ width: 1280, height: 1100 })
+    await page.setViewportSize({ width: 1280, height: 1600 })
     const currentSprint = await page.locator('.current-sprint').boundingBox()
     const board = await page.getByRole('region', { name: 'Board', exact: true }).boundingBox()
     if (!currentSprint || !board) throw new Error('Workspace preview needs the active sprint and board')
