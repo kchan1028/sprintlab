@@ -21,6 +21,8 @@ export type DraftResult =
  * function, so the request returns the app's HTML (or fails) and the feature stays hidden.
  */
 export async function checkDraftsEnabled(signal?: AbortSignal): Promise<boolean> {
+  // Static hosts without the function (GitHub Pages) build with VITE_AI_DRAFTER=off to skip a request that can only 404.
+  if (import.meta.env.VITE_AI_DRAFTER === 'off') return false
   try {
     const response = await fetch(DRAFT_ENDPOINT, { signal })
     if (!response.ok || !response.headers.get('Content-Type')?.includes('application/json')) return false

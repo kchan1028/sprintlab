@@ -2,6 +2,21 @@
 
 SprintLab is a static site hosted on **Cloudflare Pages** through its Git integration. Cloudflare builds directly from this GitHub repo. The only server code is the optional AI drafter's Pages Function, and production has no secrets set (see below).
 
+A second copy is published to **GitHub Pages** as the public demo (see [GitHub Pages demo](#github-pages-demo-45)).
+
+## GitHub Pages demo (#45)
+
+`.github/workflows/pages.yml` publishes https://kchan1028.github.io/sprintlab/ on every push to `main` (or by hand from the Actions tab).
+
+| Detail | Why |
+|---|---|
+| Built with `BASE_PATH=/sprintlab/` | The site lives under a subpath. `vite.config.ts` reads `BASE_PATH` for asset URLs, and the router uses the same base (`import.meta.env.BASE_URL`). Other builds default to `/`. |
+| `dist/index.html` copied to `dist/404.html` | GitHub Pages has no SPA fallback. Reloading a deep link like `/sprintlab/projects/<id>` serves the app with status 404, and the router takes over. |
+| Built with `VITE_AI_DRAFTER=off` | There's no Pages Function on GitHub Pages, so the app skips the drafter check instead of requesting a URL that can only 404. |
+| No `_headers` | GitHub Pages ignores `public/_headers`, so the security headers apply on Cloudflare only. |
+
+One-time setup (owner): repo **Settings → Pages → Source: GitHub Actions**. Storage note: every `*.github.io` project site of the same account shares one localStorage, and SprintLab's data lives under its own key (`sprintlab:data`).
+
 ## How deploys happen
 
 | Event | Result |
