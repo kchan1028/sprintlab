@@ -12,7 +12,8 @@ This is the only current roadmap. Requirements live in [PRODUCT.md](PRODUCT.md);
 | Optional story drafter | Implemented, released in v1.1.0 | [Release notes](docs/releases/v1.1.0.md); successful real-key drafting remains unverified |
 | GitHub Pages demo | Implemented | [Deployment guide](docs/deployment.md#github-pages-demo-45); no production verification claimed |
 | Documentation ownership and link CI | Implemented | [Merged PR #48](https://github.com/kchan1028/sprintlab/pull/48); no independent verification inferred from merge alone |
-| Focused workspace and light/dark/system appearance | In progress | [Issue #49](https://github.com/kchan1028/sprintlab/issues/49); owner approved all five critique priorities and dark mode; local author checks are recorded in the PR |
+| Focused workspace and light/dark/system appearance | Implemented | [Merged PR #50](https://github.com/kchan1028/sprintlab/pull/50), commit `64cc2b7`; author checks and CI are recorded separately from independent review; the unpublished focus follow-up remains in [#51](https://github.com/kchan1028/sprintlab/issues/51) |
+| Employer-facing README and case study | Implemented | [Issue #52](https://github.com/kchan1028/sprintlab/issues/52); employer-focused overview, decision evidence, and reproducible previews; review/check evidence is retained in the associated PR |
 | Screen-reader and cross-browser validation | Planned | [Accessibility gaps](ACCESSIBILITY.md#known-limitations); no verification claim inferred from the interface pass |
 
 A released feature is not automatically Verified across every environment. Historical local results remain evidence for their tested commits; this scaffold does not rerun or upgrade them.
@@ -46,4 +47,4 @@ P0 blocks an explicitly approved release gate. P1 is expected work that may slip
 
 ## Next actions
 
-Review issue #49 and its local UI-check evidence. Independent verification remains Pending until a separate verifier reviews the tested commit. The owner decides merging, release scope, and repository settings; this work does not authorize deployment, live model calls, or settings changes.
+The source follow-up in #51 remains unpublished and requires its own code review before merge. Employer-facing presentation evidence and remaining review requirements are recorded in the #52 pull request. The owner decides merging, release scope, and repository settings; this work does not authorize deployment, live model calls, or settings changes.

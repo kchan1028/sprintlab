@@ -1,97 +1,96 @@
 # SprintLab
 
-A small project and bug tracker for one developer: a backlog, a five-column board, short sprints with a goal, and a written review and retro at the end of each one. SprintLab was used to plan its own development, and this repository is the record of how it was built.
+A focused sprint workspace for solo developers. Plan around a goal, work through a backlog, and close each sprint with a review and retrospective.
 
-![SprintLab project page with sprints and the board](docs/screenshots/project-board.png)
+[Try the demo](https://kchan1028.github.io/sprintlab/) · [Read the case study](docs/case-study.md) · [Explore the architecture](docs/architecture.md)
 
-**Status:** [v1.1.0 released](https://github.com/kchan1028/sprintlab/releases/tag/v1.1.0), adding the optional AI story drafter ([notes and known limitations](docs/releases/v1.1.0.md); earlier: [v1.0.0](docs/releases/v1.0.0.md)). Reviews: [Sprint 1](docs/sprints/sprint-1.md), [Sprint 2](docs/sprints/sprint-2.md), [Sprint 3](docs/sprints/sprint-3.md), [Sprint 4](docs/sprints/sprint-4.md).
+Built to explore product and frontend engineering decisions: what to prioritize on screen, how keyboard focus survives state changes, and how a browser-local app protects work when saving fails.
 
-**Demo:** [kchan1028.github.io/sprintlab](https://kchan1028.github.io/sprintlab/), published from `main` by GitHub Pages. Choose **Your data → Add demo project** to explore. Your data stays in your browser. The optional AI drafter isn't available there ([deployment guide](docs/deployment.md)).
+![SprintLab showing the active sprint goal above its filtered work board](docs/screenshots/workspace-preview.png)
 
-## The problem
+*Screenshots use the built-in demo project; sprint dates are illustrative.*
 
-Solo developers track side-project work in scattered notes and TODO comments, skip planning, and never look back at what went well. Team tools like Jira are too heavy for one person. SprintLab keeps the useful parts of Agile (a backlog, a board, a sprint goal, a retro) and drops the rest.
+## Three decisions worth exploring
 
-**Audience:** one developer with one or more personal projects. No accounts, no team features, no server.
+| Decision | Why it matters | Evidence |
+|---|---|---|
+| **Current work before history** | The active goal and board lead the page. Completed sprints remain available without crowding the daily workflow. | [Design iteration](docs/case-study.md#put-current-work-before-history), [project composition](src/features/projects/ProjectPage.tsx) |
+| **Accessible controls with explicit state** | Status changes use labelled native controls. Sprint assignment is separate from progress, and item details expand without entering an edit form. | [Board implementation](src/features/workItems/Board.tsx), [accessibility checks and limits](ACCESSIBILITY.md) |
+| **Recovery is part of the product** | Failed saves retain changes with retry and download. Imports preview replacement before confirmation; completing a sprint moves unfinished work in one save. | [Data-safety decisions](docs/case-study.md#design-for-failure-before-adding-convenience), [storage boundary](src/repository/storage.ts) |
 
-## What it does
+## Try the core workflow
 
-- **Projects** with stories and bugs: title, description, priority, acceptance criteria.
-- **Board:** active-sprint work first, with explicit All items access. Backlog → Ready → In Progress → Review → Done uses labelled controls rather than dragging. Details and sprint assignment expand when needed; completed sprint history stays below the work.
-- **Appearance:** choose System, Light, or Dark in the header. The browser remembers the choice separately from project backups.
-- **Sprints:** a required goal, dates, one active sprint per project, assigning work, and filtering the board by sprint (kept in the URL).
-- **Completing a sprint:** unfinished work goes back to the product backlog or into the next sprint, in one save. Then record the review and retro.
-- **Your data:** export everything as JSON; import a backup (validated, previewed, and applied only after you confirm). Delete a project with a confirmation that shows what will go.
-- **AI story drafter (optional, local):** describe a feature and Claude drafts stories with acceptance criteria; you edit or discard each draft before anything is saved. Hidden unless a key is configured, so the rest of the app never depends on it. Runs with `npm run dev:ai` and a key in `.dev.vars` ([ADR-0002](docs/adr/0002-ai-drafter.md)).
-- **Safety:** data stays in your browser (localStorage). Failed saves keep your changes and offer retry and download; damaged data goes to a recovery screen instead of crashing the app.
+1. Open the [demo](https://kchan1028.github.io/sprintlab/) and choose **add a demo project**. The sample is added beside any existing projects in that browser.
+2. Open **SprintLab (demo)**. The active sprint's goal and three assigned items appear first; **Show all** reveals the full project backlog.
+3. Expand **Details and sprint** to inspect an item's criteria or assignment. Change its **Status** to move it through the board.
+4. Open **Complete sprint** to inspect the carryover decision. **Cancel** leaves the sprint unchanged.
 
-| Light | Dark |
-|---|---|
-| ![Light workspace](docs/screenshots/project-board.png) | ![Dark workspace](docs/screenshots/project-board-dark.png) |
+Choose **System**, **Light**, or **Dark** in the header. Project data stays in the browser; JSON export/import provides a manual backup path. The optional AI story drafter is disabled on the public demo.
 
-| Projects | Complete a sprint | Your data | Phone |
-|---|---|---|---|
-| ![Projects list](docs/screenshots/projects.png) | ![Complete sprint panel](docs/screenshots/complete-sprint.png) | ![Your data page](docs/screenshots/your-data.png) | ![Phone layout](docs/screenshots/mobile.png) |
+<details>
+<summary>See dark mode and the phone layout</summary>
 
-## Run it locally
+![Dark appearance with the same active-goal and work hierarchy](docs/screenshots/workspace-preview-dark.png)
 
-Requires Node 22.12+ (`.nvmrc` pins 24.21.0).
+[Full phone layout](docs/screenshots/mobile.png) · [Phone layout in dark mode](docs/screenshots/mobile-dark.png)
 
-```bash
+</details>
+
+## Engineering approach
+
+**React + TypeScript + Vite**, with React Router for navigation. Components dispatch actions; pure domain functions own validation and transitions; repository modules own browser storage. The optional drafter uses a serverless function, with its key kept out of browser code.
+
+- **Predictable transitions:** one active sprint per project, valid cross-record assignment, and atomic sprint completion.
+- **Explicit view state:** URL filters override the active-sprint default, including an explicit All items choice that survives reloads.
+- **Small persistence boundary:** schema and per-record validation, recovery paths, and a separate appearance preference that never changes project backups.
+- **Checks at different layers:** 256 unit/component tests, Chromium workflow tests, browser axe checks, and CI. Tests have been deliberately broken to confirm that important regressions are caught.
+
+Read the [architecture](docs/architecture.md), [accepted decisions](docs/decisions/README.md), and [test plan](docs/testing/test-plan.md) for implementation details and verification limits.
+
+## Run locally
+
+Use the Node version in [`.nvmrc`](.nvmrc), currently **24.21.0**. No account or API key is needed for the core app.
+
+```sh
 nvm use
-npm install
+npm ci
 npm run dev
 ```
 
-Open the printed URL and choose **add a demo project** to explore with sample sprints and work items.
+Open the local URL printed by Vite. The empty Projects screen offers **New project** and **add a demo project**.
 
-| Command | What it does |
+| Command | Purpose |
 |---|---|
-| `npm test` | Vitest: domain, storage, component flows, axe accessibility checks |
-| `npm run test:e2e` | Playwright smoke test against the production build (run `npx playwright install chromium` once) |
-| `npm run lint` / `npm run typecheck` | oxlint (warnings fail) / TypeScript |
-| `npm run build` | Production build to `dist/` |
-| `npm run screenshots` | Regenerate the screenshots above in light and dark appearances |
+| `npm run lint` / `npm run typecheck` | Static checks |
+| `npm test` | Domain, storage, component, and axe checks |
+| `npm run test:e2e` | Chromium workflows against a production build |
+| `npm run build` | Production build in `dist/` |
+| `npm run check:docs` | Relative Markdown links and heading anchors |
+| `npm run screenshots` | Reproduce the demo screenshots and compact previews |
 
-## How it's built
+For the first browser-test run, install Chromium with `npx playwright install chromium`. Optional local drafting and environment configuration are documented in [local setup](docs/runbooks/local-setup.md).
 
-- **Stack:** React 19, TypeScript 7, Vite 8, React Router 8. The app's runtime dependencies are `react`, `react-dom` and `react-router`; the optional AI drafter's Pages Function adds `@anthropic-ai/sdk`. Why: [ADR-0001](docs/adr/0001-stack.md), [ADR-0002](docs/adr/0002-ai-drafter.md).
-- **Architecture:** components dispatch actions; rules live in pure functions under `src/domain/`; only `src/repository/` touches storage. Details: [architecture and data model](docs/architecture.md).
-- **Quality:** 256 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [test plan](docs/testing/test-plan.md).
+## Status and scope
 
-## How it was made
+The latest tagged release is [v1.1.0](https://github.com/kchan1028/sprintlab/releases/tag/v1.1.0). Current `main` also includes the active-work layout and light/dark/system appearance from [PR #50](https://github.com/kchan1028/sprintlab/pull/50). The public demo is built from `main`.
 
-- **Process:** four planned one-week sprints, one issue per branch and PR, a Definition of Done in [CONTRIBUTING.md](CONTRIBUTING.md), and a written review and retro after each sprint ([docs/sprints/](docs/sprints/)).
-- **AI assistance:** Claude Code wrote most of the code and docs, under the owner's direction and approval. Every PR carries an AI review labelled as such, never presented as a peer review. Decisions, corrections and mistakes (including the AI's) are in the [AI collaboration log](docs/ai-collaboration-log.md). Shared working rules: [CONTRIBUTING.md](CONTRIBUTING.md) and the [coding guide](docs/coding-guide.md). Local agent instructions are untracked.
-- **Honest limits:** all four sprints ran in one AI-assisted session over 2026-11-14 and 15, so they say nothing about real weekly capacity. The VoiceOver check was skipped for v1.0.0, so it's untested with a screen reader. The deployed site isn't verified (checks were local by choice).
-- **Case study:** [docs/case-study.md](docs/case-study.md).
+SprintLab serves one developer in one browser. Accounts, team permissions, automatic sync, and team planning metrics are outside its scope. A successful real-key AI draft, screen-reader pass, real-phone check, and non-Chromium runtime coverage remain unverified. Deployment workflow success is recorded separately from live-site testing. See the [roadmap](roadmap.md) and [audit gaps](AUDIT.md).
 
-## Learning outcomes
+## Ownership and development
 
-_Draft by Claude from the retros, for the owner to edit into their own words:_
+This is an extensively AI-assisted project. The owner selected the audience, stack, hosting, scope, and product constraints, directed implementation, and approved releases. AI tools wrote most of the code, tests, and documentation under the owner’s direction. The [case study](docs/case-study.md#ownership-and-evidence-limits) distinguishes that division of work and its limits; the [collaboration log](docs/ai-collaboration-log.md) preserves decisions and corrections.
 
-- Agile adapted honestly for one person: the SDLC phases happen in every sprint, but there's no pretend team. The product owner, developer and reviewer are the same person, and AI review is labelled as AI.
-- Small PRs with acceptance criteria and recorded evidence make progress reviewable and make gaps visible ("not verified" is a valid result).
-- Tests are only trusted after they've been shown to fail. Browser checks still found bugs the tests missed in every sprint.
-- Accessibility and data safety are cheapest when designed into each feature, not bolted on at the end.
+The initial learning exercise used four planned sprints, all executed in one session over November 14–15, 2026. That history demonstrates an experiment in solo workflow, not measured weekly capacity or a team delivery record. Author checks, CI, and independent review are separate forms of evidence.
 
-## License
+## Documentation
 
-[MIT](LICENSE)
-
-## Documentation map
-
-| Document | Owns |
+| Looking for | Start here |
 |---|---|
-| [PRODUCT.md](PRODUCT.md) | Current requirements, scope, rules and acceptance criteria |
-| [roadmap.md](roadmap.md) | Priorities, delivery status, gaps and decisions |
-| [feature.md](feature.md) | Feature summary |
-| [Architecture](docs/architecture.md) and [ADRs](docs/decisions/README.md) | Structure, data model and technical decisions |
-| [Codebase map](docs/codebase-map.md) and [coding guide](docs/coding-guide.md) | Navigation and implementation rules |
-| [Test plan](docs/testing/test-plan.md) | Checks, independent verification and evidence |
-| [Documentation guide](docs/documentation-guide.md) | Topic ownership and status vocabulary |
-| [Local setup](docs/runbooks/local-setup.md) and [troubleshooting](docs/runbooks/troubleshooting.md) | Development instructions and recovery |
-| [Security](SECURITY.md), [accessibility](ACCESSIBILITY.md), [audit gaps](AUDIT.md) | Policies and known limits |
-| [Design baseline](DESIGN.md) | Existing visual system |
+| Product problem, decisions, and tradeoffs | [Case study](docs/case-study.md) |
+| Requirements and current delivery status | [Product](PRODUCT.md), [roadmap](roadmap.md), [feature overview](feature.md) |
+| Structure and implementation navigation | [Architecture](docs/architecture.md), [codebase map](docs/codebase-map.md) |
+| Verification and known limits | [Test plan](docs/testing/test-plan.md), [accessibility](ACCESSIBILITY.md), [audit register](AUDIT.md) |
+| Development, setup, and reporting | [Contributing](CONTRIBUTING.md), [local setup](docs/runbooks/local-setup.md), [security](SECURITY.md), [code of conduct](CODE_OF_CONDUCT.md) |
+| Full document ownership map | [Documentation guide](docs/documentation-guide.md) |
 
-Run `npm run check:docs` to check relative links and heading anchors in tracked Markdown. External URLs and runtime behavior are outside that check. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) for working rules.
+[MIT license](LICENSE).
