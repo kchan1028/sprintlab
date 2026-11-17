@@ -2,7 +2,7 @@
 
 ## Overview
 
-SprintLab v1 is a single-page React app with no backend. All data lives in the browser's localStorage. Three rules keep it easy to test and easy to move to a server later:
+SprintLab v1 is a single-page React app with browser-local core data and an optional serverless drafter. All data lives in the browser's localStorage. Three rules keep it easy to test and easy to move to a server later:
 
 1. **Components** render state and dispatch actions. They don't touch storage.
 2. **Domain functions** (`src/domain/`) hold the rules: validation, allowed status values, one active sprint per project. They are pure TypeScript and unit-tested.
@@ -10,7 +10,7 @@ SprintLab v1 is a single-page React app with no backend. All data lives in the b
 
 ```mermaid
 flowchart TD
-  UI[React components<br/>screens, forms, dialogs] -->|dispatch actions| State[App state<br/>useReducer + Context]
+  UI[React components<br/>screens, forms, dialogs] -->|dispatch actions| State[App state<br/>action dispatch + Context]
   State -->|read state| UI
   State --> Domain[domain/<br/>validation, status and sprint rules<br/>pure TS, unit-tested]
   State --> Repo[repository/<br/>load, save, migrate, export, import]
@@ -106,3 +106,9 @@ erDiagram
 - Data is stored under one localStorage key as a single JSON document. Loading checks the top-level shape **and every record's fields and types** (`src/repository/validate.ts`). If anything fails, the app shows a recoverable error and offers a download of the raw data or a reset. It never silently overwrites.
 - If a save fails (storage full or blocked), changes stay in memory. A banner offers **Try saving again** and **Download a copy**, and the browser asks for confirmation before the tab closes.
 - An error boundary around the routes replaces a blank page with a recovery message (reload, download a copy).
+
+## Documentation boundaries
+
+This file owns technical structure and the browser-local data model; SprintLab has no database schema, so no competing DATA_MODEL.md is introduced. Requirements live in [PRODUCT.md](../PRODUCT.md), status in [roadmap.md](../roadmap.md), and accepted decisions remain at their existing paths through the [decision index](decisions/README.md). The UI dispatches actions through AppDataProvider and appReducer; persistence remains behind the repository boundary.
+
+The diagrams above show how browser features delegate rules and storage, and how projects contain work items and sprints. The optional server path exists only for drafting; it does not store project data.

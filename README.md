@@ -52,12 +52,12 @@ Open the printed URL and choose **add a demo project** to explore with sample sp
 
 - **Stack:** React 19, TypeScript 7, Vite 8, React Router 8. The app's runtime dependencies are `react`, `react-dom` and `react-router`; the optional AI drafter's Pages Function adds `@anthropic-ai/sdk`. Why: [ADR-0001](docs/adr/0001-stack.md), [ADR-0002](docs/adr/0002-ai-drafter.md).
 - **Architecture:** components dispatch actions; rules live in pure functions under `src/domain/`; only `src/repository/` touches storage. Details: [architecture and data model](docs/architecture.md).
-- **Quality:** 248 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [testing strategy](docs/testing-strategy.md).
+- **Quality:** 249 Vitest tests, an end-to-end test in CI, axe checks, and a mutation check in every feature PR. Details: [test plan](docs/testing/test-plan.md).
 
 ## How it was made
 
 - **Process:** four planned one-week sprints, one issue per branch and PR, a Definition of Done in [CONTRIBUTING.md](CONTRIBUTING.md), and a written review and retro after each sprint ([docs/sprints/](docs/sprints/)).
-- **AI assistance:** Claude Code wrote most of the code and docs, under the owner's direction and approval. Every PR carries an AI review labelled as such, never presented as a peer review. Decisions, corrections and mistakes (including the AI's) are in the [AI collaboration log](docs/ai-collaboration-log.md). Conventions for the AI: [CLAUDE.md](CLAUDE.md).
+- **AI assistance:** Claude Code wrote most of the code and docs, under the owner's direction and approval. Every PR carries an AI review labelled as such, never presented as a peer review. Decisions, corrections and mistakes (including the AI's) are in the [AI collaboration log](docs/ai-collaboration-log.md). Shared working rules: [CONTRIBUTING.md](CONTRIBUTING.md) and the [coding guide](docs/coding-guide.md). Local agent instructions are untracked.
 - **Honest limits:** all four sprints ran in one AI-assisted session over 2026-11-14 and 15, so they say nothing about real weekly capacity. The VoiceOver check was skipped for v1.0.0, so it's untested with a screen reader. The deployed site isn't verified (checks were local by choice).
 - **Case study:** [docs/case-study.md](docs/case-study.md).
 
@@ -73,3 +73,20 @@ _Draft by Claude from the retros, for the owner to edit into their own words:_
 ## License
 
 [MIT](LICENSE)
+
+## Documentation map
+
+| Document | Owns |
+|---|---|
+| [PRODUCT.md](PRODUCT.md) | Current requirements, scope, rules and acceptance criteria |
+| [roadmap.md](roadmap.md) | Priorities, delivery status, gaps and decisions |
+| [feature.md](feature.md) | Feature summary |
+| [Architecture](docs/architecture.md) and [ADRs](docs/decisions/README.md) | Structure, data model and technical decisions |
+| [Codebase map](docs/codebase-map.md) and [coding guide](docs/coding-guide.md) | Navigation and implementation rules |
+| [Test plan](docs/testing/test-plan.md) | Checks, independent verification and evidence |
+| [Documentation guide](docs/documentation-guide.md) | Topic ownership and status vocabulary |
+| [Local setup](docs/runbooks/local-setup.md) and [troubleshooting](docs/runbooks/troubleshooting.md) | Development instructions and recovery |
+| [Security](SECURITY.md), [accessibility](ACCESSIBILITY.md), [audit gaps](AUDIT.md) | Policies and known limits |
+| [Design baseline](DESIGN.md) | Existing visual system |
+
+Run `npm run check:docs` to check relative links and heading anchors in tracked Markdown. External URLs and runtime behavior are outside that check. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [code of conduct](CODE_OF_CONDUCT.md) for working rules.

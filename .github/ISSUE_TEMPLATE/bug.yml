@@ -32,3 +32,9 @@ body:
       options: [Blocking, Major, Minor]
     validations:
       required: true
+
+  - type: textarea
+    id: requirement-impact
+    attributes:
+      label: Related requirement and documentation impact
+      description: Link the PRODUCT.md or roadmap.md section, or state what is missing. Never include secrets or real project data.
