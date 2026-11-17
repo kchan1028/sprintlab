@@ -4,7 +4,7 @@ A small project and bug tracker for one developer: a backlog, a five-column boar
 
 ![SprintLab project page with sprints and the board](docs/screenshots/project-board.png)
 
-**Status:** [v1.0.0 released](https://github.com/kchan1028/sprintlab/releases/tag/v1.0.0) ([notes and known limitations](docs/releases/v1.0.0.md)). Reviews: [Sprint 1](docs/sprints/sprint-1.md), [Sprint 2](docs/sprints/sprint-2.md), [Sprint 3](docs/sprints/sprint-3.md), [Sprint 4](docs/sprints/sprint-4.md).
+**Status:** [v1.1.0 released](https://github.com/kchan1028/sprintlab/releases/tag/v1.1.0), adding the optional AI story drafter ([notes and known limitations](docs/releases/v1.1.0.md); earlier: [v1.0.0](docs/releases/v1.0.0.md)). Reviews: [Sprint 1](docs/sprints/sprint-1.md), [Sprint 2](docs/sprints/sprint-2.md), [Sprint 3](docs/sprints/sprint-3.md), [Sprint 4](docs/sprints/sprint-4.md).
 
 **Demo:** no hosted demo link in v1.0.0. The app deploys to Cloudflare Pages ([deployment guide](docs/deployment.md)), but the public URL wasn't verified. Run it locally (below) and choose **add a demo project**.
 
