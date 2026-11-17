@@ -10,6 +10,7 @@ function json(body: unknown, status = 200) {
 afterEach(() => {
   vi.useRealTimers()
   vi.unstubAllGlobals()
+  vi.unstubAllEnvs()
 })
 
 describe('checkDraftsEnabled', () => {
@@ -20,6 +21,14 @@ describe('checkDraftsEnabled', () => {
     expect(await checkDraftsEnabled()).toBe(false)
     vi.stubGlobal('fetch', vi.fn(async () => json({ enabled: true }, 500)))
     expect(await checkDraftsEnabled()).toBe(false)
+  })
+
+  it('makes no request in a build without the function', async () => {
+    vi.stubEnv('VITE_AI_DRAFTER', 'off')
+    const fetchMock = vi.fn(async () => json({ enabled: true }))
+    vi.stubGlobal('fetch', fetchMock)
+    expect(await checkDraftsEnabled()).toBe(false)
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })
 

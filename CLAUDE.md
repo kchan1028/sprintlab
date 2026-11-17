@@ -25,7 +25,7 @@ Requires Node 22.12+ (the repo pins an exact Node 24 release in `.nvmrc`; run `n
 
 CI (`.github/workflows/ci.yml`) runs two jobs on every PR and on pushes to `main`: `check` (lint, typecheck, test, build) and `e2e` (Playwright). Testing approach: `docs/testing-strategy.md`.
 
-Deploys: Cloudflare Pages Git integration. `main` → production, every PR → preview URL. See `docs/deployment.md`.
+Deploys: Cloudflare Pages Git integration. `main` → production, every PR → preview URL. The public demo is GitHub Pages (`.github/workflows/pages.yml`, https://kchan1028.github.io/sprintlab/), built under the `/sprintlab/` subpath. See `docs/deployment.md`.
 
 Verification is **local only** (owner decision, 2026-11-14): run `npm run dev` and follow the PR's "How to verify" steps in a browser. Don't check Cloudflare production or preview URLs.
 
