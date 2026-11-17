@@ -102,7 +102,7 @@ export function SprintForm({ initial, onSubmit, onCancel }: SprintFormProps) {
         </div>
       </div>
       <div className="actions">
-        <button type="submit">Create sprint</button>
+        <button type="submit" className="primary-button">Create sprint</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>

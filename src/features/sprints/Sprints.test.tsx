@@ -59,7 +59,7 @@ describe('Sprints', () => {
     await fillDate('End date', '2026-11-22')
     await user.click(screen.getByRole('button', { name: 'Create sprint' }))
 
-    const region = sprintsRegion()
+    const region = screen.getByRole('region', { name: 'Upcoming sprints' })
     expect(within(region).getByRole('heading', { name: 'Sprint 1 Planned' })).toBeInTheDocument()
     expect(within(region).getByText('Nov 16 – Nov 22, 2026 · 0 items')).toBeInTheDocument()
     expect(within(region).getByText('Board works end to end')).toBeInTheDocument()
@@ -112,9 +112,8 @@ describe('Sprints', () => {
     saveData({ ...emptyData(), projects: [p1, p2], sprints: [s1, s2] })
     renderApp('/projects/p1')
 
-    await userEvent.click(screen.getByRole('button', { name: 'Start Sprint 2' }))
-
-    expect(screen.getByRole('alert')).toHaveTextContent('“Sprint 1” is already active. Complete it before starting “Sprint 2”.')
+    expect(screen.getByRole('button', { name: 'Start Sprint 2' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Start Sprint 2' })).toHaveAccessibleDescription('“Sprint 1” is already active. Complete it before starting “Sprint 2”.')
     expect(storedSprints().map((s) => s.state)).toEqual(['active', 'planned'])
   })
 

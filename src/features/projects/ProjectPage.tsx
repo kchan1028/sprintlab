@@ -61,13 +61,20 @@ export function ProjectPage() {
       <header className="project-header">
         <div className="section-header">
           <h2>{project.name}</h2>
-          {!confirmingDelete && (
-            <button type="button" ref={focusTarget('delete')} onClick={() => setConfirmingDelete(true)}>
-              Delete project
-            </button>
-          )}
         </div>
         {project.description && <p>{project.description}</p>}
+      </header>
+      <SprintsSection project={project}>
+        <WorkItemsSection project={project} />
+      </SprintsSection>
+      <DraftStoriesSection project={project} />
+      <section className="project-management" aria-label="Project settings">
+        <h2>Project settings</h2>
+        {!confirmingDelete && (
+          <button type="button" ref={focusTarget('delete')} onClick={() => setConfirmingDelete(true)}>
+            Delete project
+          </button>
+        )}
         {confirmingDelete && (
           <DeleteProjectPanel
             project={project}
@@ -77,10 +84,7 @@ export function ProjectPage() {
             onCancel={cancelDelete}
           />
         )}
-      </header>
-      <SprintsSection project={project} />
-      <WorkItemsSection project={project} />
-      <DraftStoriesSection project={project} />
+      </section>
     </>
   )
 }

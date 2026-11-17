@@ -35,7 +35,7 @@ React Router 8 in declarative mode (`BrowserRouter` + `Routes`). Cloudflare Page
 | Path | Screen |
 |---|---|
 | `/` | Projects list |
-| `/projects/:projectId` | Project page: sprints (create, start, complete, review and retro, item counts) and the board with five status columns. `?sprint=none` or `?sprint=<id>` filters the board (unknown id → all items; unknown project → "Project not found") |
+| `/projects/:projectId` | Project page: sprints (create, start, complete, review and retro, item counts) and the board with five status columns. No explicit sprint filter defaults to active-sprint work if available; `?sprint=all`, `?sprint=none`, or `?sprint=<id>` overrides it (unknown id → all items; unknown project → "Project not found") |
 | `/data` | Your data: export all data as JSON, import a backup (validated, previewed, replaces everything after confirmation) |
 | `*` | Page not found |
 
@@ -106,6 +106,10 @@ erDiagram
 - Data is stored under one localStorage key as a single JSON document. Loading checks the top-level shape **and every record's fields and types** (`src/repository/validate.ts`). If anything fails, the app shows a recoverable error and offers a download of the raw data or a reset. It never silently overwrites.
 - If a save fails (storage full or blocked), changes stay in memory. A banner offers **Try saving again** and **Download a copy**, and the browser asks for confirmation before the tab closes.
 - An error boundary around the routes replaces a blank page with a recovery message (reload, download a copy).
+
+## Appearance preferences
+
+`src/repository/appearance.ts` owns the separate `sprintlab:appearance` localStorage key. Its closed values are system/light/dark; read failures fall back to System and write failures return a result. `src/main.tsx` applies the preference before mounting; `AppearanceSelect` updates the root attribute and reports failed persistence. CSS `color-scheme` and semantic `light-dark()` tokens handle system changes without extra event listeners. Project export/import and schema version stay unchanged.
 
 ## Documentation boundaries
 

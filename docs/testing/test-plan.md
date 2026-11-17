@@ -31,6 +31,7 @@ Preserve the existing requirement to run lint, typecheck, and tests before a PR.
 | Routing and persistence | Reload loses state or deep link breaks | Main-flow e2e, App tests, local subpath check when routing/build changes |
 | Drafter | Untrusted output, premature save, key leakage | Domain parser, client/UI, and server tests; no real API calls in CI |
 | Accessibility | Unnamed controls or lost focus | Axe component tests, keyboard/browser checks; limits below |
+| Workspace and appearance | Hidden newly created items, forgotten explicit filters, lost completion focus, unreadable dark controls, or narrow-screen overflow | Planning, appearance, accessibility, and Chromium workspace tests; light/dark screenshots and browser axe checks |
 | Documentation | Broken target or anchor | Link checker across tracked Markdown, positive and negative fixtures when checker changes |
 
 ## 3. Independent verification
@@ -63,13 +64,17 @@ Failing required checks, unresolved acceptance criteria, data-loss defects, or m
 
 Use Pass, Fail, Blocked, or Not Run. Only actual Pass evidence supports a verification claim.
 
+## Workspace regression coverage
+
+Issue #49 covers the active-sprint default, explicit all-items reload, newly created unassigned work remaining visible, collapsed history, completion focus, and details/assignment access. Appearance tests cover invalid or blocked storage, persistence, separate project data, and availability on recovery screens. Browser tests cover System following a dark OS preference, explicit overrides, 320/390/768/1280px layouts, long text, 44px control heights, and axe checks on light/dark forms and destructive confirmations. These are local Chromium checks, not real-device, screen-reader, or cross-browser verification.
+
 ## 8. Keeping this plan current
 
 Review this plan on every change. Update when workflows, failure handling, commands, CI, fixtures, coverage, or responsibilities change. Every PR includes **Test plan updated:** what and why, or **No test plan update needed:** why. Results belong in the PR or linked report.
 
 # Existing test layers and conventions
 
-SprintLab is a single-user app with no backend, so most risk sits in **domain rules** (what's allowed), **data safety** (nothing is lost or corrupted), and **usability** (keyboard, screen readers, clear errors). The tests follow that.
+SprintLab is a single-user app with browser-local core data and an optional drafting function, so most risk sits in **domain rules** (what's allowed), **data safety** (nothing is lost or corrupted), and **usability** (keyboard, screen readers, clear errors). The tests follow that.
 
 ## Layers
 

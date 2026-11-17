@@ -61,7 +61,7 @@ export function CompleteSprintPanel({
       )}
       <p className="field-hint">Afterwards the sprint is read-only, except its review and retro.</p>
       <div className="actions">
-        <button type="submit" autoFocus={unfinishedCount === 0}>
+        <button type="submit" className="primary-button" autoFocus={unfinishedCount === 0}>
           Complete sprint
         </button>
         <button type="button" onClick={onCancel}>

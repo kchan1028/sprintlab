@@ -70,7 +70,7 @@ export function ProjectForm({ title, submitLabel, initial, onSubmit, onCancel }:
         />
       </div>
       <div className="actions">
-        <button type="submit">{submitLabel}</button>
+        <button type="submit" className="primary-button">{submitLabel}</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>

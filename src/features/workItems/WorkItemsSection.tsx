@@ -46,7 +46,11 @@ export function WorkItemsSection({ project }: { project: Project }) {
   const items = data.workItems.filter((w) => w.projectId === project.id)
   const sprints = sortSprints(data.sprints.filter((s) => s.projectId === project.id))
   const assignable = assignableSprints(sprints, project.id)
-  const filter = parseSprintFilter(searchParams.get('sprint'), sprints)
+  const active = sprints.find((sprint) => sprint.state === 'active')
+  const requestedFilter = searchParams.get('sprint')
+  const filter = requestedFilter === null && active
+    ? { kind: 'sprint' as const, sprintId: active.id }
+    : parseSprintFilter(requestedFilter, sprints)
   const visibleItems = items.filter((w) => matchesFilter(w, filter))
 
   function setFilter(next: SprintFilter) {
@@ -55,8 +59,7 @@ export function WorkItemsSection({ project }: { project: Project }) {
       (current) => {
         // Copy rather than mutate the router's current params.
         const next = new URLSearchParams(current)
-        if (value === null) next.delete('sprint')
-        else next.set('sprint', value)
+        next.set('sprint', value)
         return next
       },
       { replace: true },
@@ -69,7 +72,10 @@ export function WorkItemsSection({ project }: { project: Project }) {
   const editingItem = editing.mode === 'edit' ? items.find((w) => w.id === editing.itemId) : undefined
 
   function handleCreate(input: WorkItemInput) {
-    dispatch({ type: 'workItem/created', workItem: createWorkItem(input, project.id, crypto.randomUUID(), now()) })
+    const workItem = createWorkItem(input, project.id, crypto.randomUUID(), now())
+    dispatch({ type: 'workItem/created', workItem })
+    // New work remains unassigned; reveal it when the current sprint filter would hide it.
+    if (!matchesFilter(workItem, filter)) setFilter({ kind: 'none' })
     close()
   }
 
@@ -103,18 +109,21 @@ export function WorkItemsSection({ project }: { project: Project }) {
   const filterValue = filter.kind === 'sprint' ? filter.sprintId : filter.kind
 
   return (
-    <section aria-labelledby="board-heading">
+    <section aria-labelledby="board-heading" className="work-section">
       <div className="section-header">
         <h2 id="board-heading">Board</h2>
         {editing.mode === 'none' && (
-          <button type="button" ref={focusTarget('new')} onClick={() => setEditing({ mode: 'create' })}>
+          <button type="button" className="primary-button" ref={focusTarget('new')} onClick={() => setEditing({ mode: 'create' })}>
             New work item
           </button>
         )}
       </div>
 
       {editing.mode === 'create' && (
-        <WorkItemForm title="New work item" submitLabel="Create work item" onSubmit={handleCreate} onCancel={close} />
+        <>
+          <p className="field-hint">New items start in Backlog with no sprint assigned.</p>
+          <WorkItemForm title="New work item" submitLabel="Create work item" onSubmit={handleCreate} onCancel={close} />
+        </>
       )}
       {editingItem && (
         <WorkItemForm
@@ -133,7 +142,7 @@ export function WorkItemsSection({ project }: { project: Project }) {
 
       <div className="board-toolbar">
         <label htmlFor="sprint-filter">Show</label>
-        <select id="sprint-filter" ref={filterRef} value={filterValue} onChange={(e) => handleFilterChange(e.target.value)}>
+        <select id="sprint-filter" aria-describedby="sprint-filter-help" ref={filterRef} value={filterValue} onChange={(e) => handleFilterChange(e.target.value)}>
           <option value="all">All items</option>
           <option value="none">No sprint (product backlog)</option>
           {sprints.map((s) => (
@@ -151,6 +160,9 @@ export function WorkItemsSection({ project }: { project: Project }) {
           </p>
         )}
       </div>
+      <p id="sprint-filter-help" className="field-hint board-help">
+        Status tracks progress. Sprint groups planned work. No sprint means product backlog.
+      </p>
       {assignError && (
         <p role="alert" className="field-error">
           {assignError}

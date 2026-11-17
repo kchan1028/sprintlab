@@ -76,8 +76,8 @@ export function DataPage() {
     <section aria-labelledby="data-heading">
       <h2 id="data-heading">Your data</h2>
       <p>
-        SprintLab keeps everything in this browser only. Nothing is sent to a server, so a backup file is the only
-        copy outside this browser.
+        SprintLab saves your project data in this browser. Export a backup to keep a copy outside this browser.
+        The optional story drafter sends only the request and project context you submit.
       </p>
 
       {status && (
@@ -91,17 +91,6 @@ export function DataPage() {
         <p>Download all projects, work items and sprints as a JSON file ({summarize(data)}).</p>
         <button type="button" onClick={exportAll}>
           Download all data
-        </button>
-      </section>
-
-      <section aria-labelledby="demo-heading" className="data-section">
-        <h3 id="demo-heading">Demo data</h3>
-        <p>
-          Add a sample project based on SprintLab’s own backlog, with completed, active and planned sprints. It’s added
-          next to your projects; delete it any time.
-        </p>
-        <button type="button" onClick={() => announce(`Added the demo project “${addDemo()}”.`)}>
-          Add demo project
         </button>
       </section>
 
@@ -153,6 +142,17 @@ export function DataPage() {
           </section>
         )}
       </section>
+      <section aria-labelledby="demo-heading" className="data-section">
+        <h3 id="demo-heading">Demo data</h3>
+        <p>
+          Add a sample project based on SprintLab’s own backlog, with completed, active and planned sprints. It’s added
+          next to your projects; delete it any time.
+        </p>
+        <button type="button" onClick={() => announce(`Added the demo project “${addDemo()}”.`)}>
+          Add demo project
+        </button>
+      </section>
+
     </section>
   )
 }

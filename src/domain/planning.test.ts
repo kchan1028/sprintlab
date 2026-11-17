@@ -64,7 +64,7 @@ describe('filters', () => {
     expect(parseSprintFilter('none', sprints)).toEqual({ kind: 'none' })
     expect(parseSprintFilter('s1', sprints)).toEqual({ kind: 'sprint', sprintId: 's1' })
     expect(parseSprintFilter('deleted', sprints)).toEqual({ kind: 'all' })
-    expect(filterToParam({ kind: 'all' })).toBeNull()
+    expect(filterToParam({ kind: 'all' })).toBe('all')
     expect(filterToParam({ kind: 'none' })).toBe('none')
     expect(filterToParam({ kind: 'sprint', sprintId: 's1' })).toBe('s1')
   })

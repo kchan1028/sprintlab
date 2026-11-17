@@ -40,8 +40,8 @@ export function parseSprintFilter(value: string | null, sprints: Sprint[]): Spri
   return { kind: 'all' }
 }
 
-export function filterToParam(filter: SprintFilter): string | null {
-  if (filter.kind === 'all') return null
+export function filterToParam(filter: SprintFilter): string {
+  if (filter.kind === 'all') return 'all'
   if (filter.kind === 'none') return 'none'
   return filter.sprintId
 }

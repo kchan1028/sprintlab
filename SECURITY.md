@@ -1,6 +1,6 @@
 # Security policy
 
-SprintLab stores project data in the visitor's localStorage. It has no accounts, permissions system, payments, or hosted project database. An optional serverless story drafter sends the user's typed request and project context to the model provider; its key stays server-side. The deployed demo has no drafter. Do not enter secrets or sensitive personal data into demo fixtures or issue reports.
+SprintLab stores project data in the visitor's localStorage. Appearance is stored separately under `sprintlab:appearance`, contains only `system`, `light`, or `dark`, and is excluded from project JSON export/import. A failure to read or save it does not change project data or bypass the recovery screen. It has no accounts, permissions system, payments, or hosted project database. An optional serverless story drafter sends the user's typed request and project context to the model provider; its key stays server-side. The deployed demo has no drafter. Do not enter secrets or sensitive personal data into demo fixtures or issue reports.
 
 ## Supported versions
 
