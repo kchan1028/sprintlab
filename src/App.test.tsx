@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderApp } from './test/renderApp'
@@ -34,18 +34,20 @@ describe('App', () => {
 
   it('keeps the data when the user cancels a reset', async () => {
     localStorage.setItem(STORAGE_KEY, '{not json')
-    vi.spyOn(window, 'confirm').mockReturnValue(false)
     renderApp()
     await userEvent.click(screen.getByRole('button', { name: 'Reset data' }))
+    const dialog = screen.getByRole('dialog', { name: 'Reset all SprintLab data?' })
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+    expect(dialog).not.toHaveAttribute('open')
     expect(localStorage.getItem(STORAGE_KEY)).toBe('{not json')
     expect(screen.getByRole('alert')).toBeInTheDocument()
   })
 
   it('clears the data and shows the empty state after a confirmed reset', async () => {
     localStorage.setItem(STORAGE_KEY, '{not json')
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     renderApp()
     await userEvent.click(screen.getByRole('button', { name: 'Reset data' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Reset everything' }))
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     expect(screen.getByText('No projects yet.')).toBeInTheDocument()

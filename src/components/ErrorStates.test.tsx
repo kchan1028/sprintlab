@@ -97,12 +97,12 @@ describe('Save failures', () => {
 describe('Reset failures', () => {
   it('explains when reset could not remove corrupt data', async () => {
     localStorage.setItem(STORAGE_KEY, '{oops')
-    vi.spyOn(window, 'confirm').mockReturnValue(true)
     vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
       throw new DOMException('blocked', 'SecurityError')
     })
     renderApp()
     await userEvent.click(screen.getByRole('button', { name: 'Reset data' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Reset everything' }))
     expect(screen.getByText(/Reset didn't work/)).toBeInTheDocument()
     expect(screen.getByRole('alert')).toHaveTextContent("Your saved data couldn't be read")
   })

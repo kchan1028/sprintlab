@@ -75,7 +75,7 @@ export function startSprint(sprint: Sprint): Sprint {
 /** Active first, then planned by start date, then completed (most recent first). */
 export function sortSprints(sprints: Sprint[]): Sprint[] {
   const rank: Record<SprintState, number> = { active: 0, planned: 1, completed: 2 }
-  return [...sprints].sort((a, b) => {
+  return sprints.toSorted((a, b) => {
     if (a.state !== b.state) return rank[a.state] - rank[b.state]
     return a.state === 'completed' ? b.startDate.localeCompare(a.startDate) : a.startDate.localeCompare(b.startDate)
   })

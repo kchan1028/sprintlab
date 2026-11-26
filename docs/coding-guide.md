@@ -46,7 +46,7 @@ Use PascalCase for components and types, camelCase for functions and variables, 
 
 ## Domain rules
 
-The [product core flows](../PRODUCT.md#core-flows-and-acceptance-criteria) own behavior and the [architecture data model](architecture.md#data-model) owns exact relationships. Keep validation and transitions pure in `src/domain/`; only `src/repository/` touches localStorage. Components dispatch actions instead of duplicating domain logic. Preserve atomic completion and backup/recovery behavior.
+The [product core flows](../PRODUCT.md#core-flows-and-acceptance-criteria) own behavior and the [architecture data model](architecture.md#data-model) owns exact relationships. Keep validation and transitions pure in `src/domain/`; only `src/repository/` touches localStorage (the sole exception is the pre-paint theme script in `index.html`; see [architecture](architecture.md)). Components dispatch actions instead of duplicating domain logic. Preserve atomic completion and backup/recovery behavior.
 
 ## Roles, privacy, secrets, and audit history
 

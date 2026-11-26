@@ -32,8 +32,10 @@
   background-color: var(--surface);
 }
 
-:root[data-appearance='light'] { color-scheme: light; }
-:root[data-appearance='dark'] { color-scheme: dark; }
+/* The saved appearance lives in <meta name="color-scheme"> (index.html, AppearanceSelect).
+   The base stays `light dark`, so the page follows the system if no script runs. */
+:root:has(> head > meta[name='color-scheme'][content='light']) { color-scheme: light; }
+:root:has(> head > meta[name='color-scheme'][content='dark']) { color-scheme: dark; }
 
 * { box-sizing: border-box; }
 html { scrollbar-color: var(--control-border) var(--subtle); }
@@ -163,6 +165,13 @@ body {
 .work-progress progress::-moz-progress-bar { background: var(--accent); border-radius: 4px; }
 .work-progress-compact { max-width: 36rem; margin-top: var(--space-4); }
 .work-progress-compact progress { height: 6px; }
+/* Forced colors replaces author backgrounds, which would hide the custom fill; the fill is information, so use system colors. */
+@media (forced-colors: active) {
+  .work-progress progress { forced-color-adjust: none; background: Canvas; border: 1px solid CanvasText; }
+  .work-progress progress::-webkit-progress-bar { background: Canvas; }
+  .work-progress progress::-webkit-progress-value { background: Highlight; }
+  .work-progress progress::-moz-progress-bar { background: Highlight; }
+}
 .status-breakdown { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-3); margin: var(--space-4) 0 0; }
 .status-breakdown > div { min-width: 0; display: flex; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; }
 .status-breakdown dt { color: var(--muted); font-size: 0.875rem; }
@@ -341,17 +350,17 @@ fieldset.field legend {
   align-items: start;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 75em) {
   .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 700px) {
+@media (max-width: 43.75em) {
   .board { grid-template-columns: 1fr; }
   .board[data-has-items='true'] .board-column-empty { display: none; }
   .board[data-has-items='false'] .board-column:not(:first-child) { display: none; }
 }
 
 .board-jump-links { display: none; }
-@media (max-width: 1200px) {
+@media (max-width: 75em) {
   .board-jump-links { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4); }
   .board-jump-links a {
     display: inline-flex; align-items: center; gap: var(--space-1);
@@ -360,7 +369,7 @@ fieldset.field legend {
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 43.75em) {
   .board-jump-links a[data-empty='true'] { display: none; }
 }
 
@@ -494,7 +503,7 @@ fieldset.field legend {
   gap: 1rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 37.5em) {
   .sprint-summary {
     flex-direction: column;
     gap: 0.5rem;
@@ -661,7 +670,7 @@ button.danger-button:hover:not(:disabled) { background-color: var(--danger-butto
 .main-nav a { display: inline-flex; align-items: center; min-height: 2.75rem; padding-inline: var(--space-3); border-radius: 6px; text-decoration: none; }
 .main-nav a[aria-current='page'] { background: var(--subtle); }
 .main-nav a:hover { text-decoration: underline; }
-@media (max-width: 700px) {
+@media (max-width: 43.75em) {
   .app { padding: var(--space-4); }
   .project-list { padding-inline: var(--space-4); }
   .current-sprint { padding: var(--space-4); }
@@ -721,3 +730,20 @@ button.danger-button:hover:not(:disabled) { background-color: var(--danger-butto
   margin: 0.25rem 0 0.5rem;
   padding-left: 1.25rem;
 }
+
+/* Modal confirmations (native <dialog> opened with showModal()). */
+dialog:modal {
+  overscroll-behavior: contain; /* keeps scroll gestures in the dialog from scrolling the page */
+  max-width: min(32rem, calc(100vw - 2rem));
+  padding: var(--space-6);
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+dialog::backdrop {
+  overflow: hidden; /* ::backdrop isn't a scroll container, so it would ignore overscroll-behavior */
+  overscroll-behavior: contain;
+  background-color: rgb(0 0 0 / 0.5);
+}
+dialog h1 { font-size: 1.25rem; margin-top: 0; }
