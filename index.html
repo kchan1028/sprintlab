@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Applies a saved Light/Dark choice before first paint. Keep it tiny: the CSP allows it by hash. -->
+    <script>
+      try { const a = localStorage.getItem('sprintlab:appearance'); if (a === 'light' || a === 'dark') document.querySelector('meta[name="color-scheme"]').content = a } catch {}
+    </script>
     <title>SprintLab</title>
   </head>
   <body>

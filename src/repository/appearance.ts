@@ -12,7 +12,9 @@ export function readAppearance(): Appearance {
 
 export function saveAppearance(value: Appearance): boolean {
   try {
-    window.localStorage.setItem(APPEARANCE_KEY, value)
+    // System is the default: store nothing, so the page keeps following the OS.
+    if (value === 'system') window.localStorage.removeItem(APPEARANCE_KEY)
+    else window.localStorage.setItem(APPEARANCE_KEY, value)
     return true
   } catch {
     return false

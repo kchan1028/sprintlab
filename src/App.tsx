@@ -22,10 +22,6 @@ function App() {
   const [resetFailed, setResetFailed] = useState(false)
 
   function handleReset() {
-    const confirmed = window.confirm(
-      'Reset deletes all SprintLab data saved in this browser. This cannot be undone. Continue?',
-    )
-    if (!confirmed) return
     const result = resetData()
     setResetFailed(!result.ok)
     if (result.ok) setLoaded(loadData())

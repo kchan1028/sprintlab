@@ -19,6 +19,7 @@ Close a finding only with independently reviewed evidence tied to a commit and s
 | ID | Finding | Severity | Launch impact | Owner | Status | Closure evidence |
 |---|---|---|---|---|---|---|
 | AUD-001 | Starting a planned sprint removes the focused Start button as its row moves above the board | Medium | Keyboard usability follow-up | Change author | Fixed (pending verification) | #51 fix and component/Chromium regressions; independent review required before closure |
+| AUD-002 | Modern-web audit of `3b746ee`: saved theme applied after first paint, no Content-Security-Policy, reset confirmed with `window.confirm`, progress fill invisible in forced colors, `px` breakpoints, copy-then-sort | Medium | Theming, hardening and accessibility follow-up; core flows unaffected | Change author | Fixed (pending verification) | #57 fixes with component and Chromium checks (including mutation checks); independent review required before closure |
 
 ## Documented readiness gaps
 

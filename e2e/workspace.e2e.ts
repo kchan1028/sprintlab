@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { expect, test } from '@playwright/test'
 
@@ -58,7 +59,7 @@ test('appearance follows system, remembers overrides, and fits narrow screens', 
   }
   await page.getByRole('link', { name: 'Your data', exact: true }).click()
   await expect(page.getByRole('button', { name: 'Download all data' })).toBeVisible()
-  await expect(page.locator('html')).toHaveAttribute('data-appearance', 'dark')
+  await expect(page.locator('meta[name="color-scheme"]')).toHaveAttribute('content', 'dark')
 })
 
 
@@ -70,7 +71,8 @@ test('light and dark forms pass browser accessibility checks and contain long co
   expect(edit?.height).toBe(44)
   expect(edit?.width).toBeGreaterThan(48)
   await page.getByRole('link', { name: 'SprintLab (demo)' }).click()
-  await page.addScriptTag({ path: createRequire(import.meta.url).resolve('axe-core/axe.min.js') })
+  // Evaluated over the DevTools protocol, so the production CSP (no inline scripts) stays on during the check.
+  await page.evaluate(readFileSync(createRequire(import.meta.url).resolve('axe-core/axe.min.js'), 'utf8'))
   for (const appearance of ['light', 'dark']) {
     await page.getByLabel('Appearance').selectOption(appearance)
     await page.getByRole('button', { name: 'New work item' }).click()

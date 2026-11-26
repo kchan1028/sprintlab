@@ -109,7 +109,7 @@ erDiagram
 
 ## Appearance preferences
 
-`src/repository/appearance.ts` owns the separate `sprintlab:appearance` localStorage key. Its closed values are system/light/dark; read failures fall back to System and write failures return a result. `src/main.tsx` applies the preference before mounting; `AppearanceSelect` updates the root attribute and reports failed persistence. CSS `color-scheme` and semantic `light-dark()` tokens handle system changes without extra event listeners. Project export/import and schema version stay unchanged.
+`src/repository/appearance.ts` owns the separate `sprintlab:appearance` localStorage key. Its closed values are system/light/dark; read failures fall back to System and write failures return a result. The preference is reflected in `<meta name="color-scheme">`, which CSS maps to `color-scheme` with `:has()`. A tiny inline script in `index.html` sets it from the saved value before first paint (the one place outside `src/repository/` that reads localStorage, kept there to avoid a flash of the wrong theme; the production CSP allows it by hash). `AppearanceSelect` keeps the meta current, follows changes from other tabs, and reports failed persistence. Choosing System removes the key. CSS `color-scheme` and semantic `light-dark()` tokens handle system changes without extra event listeners. Project export/import and schema version stay unchanged.
 
 ## Documentation boundaries
 
